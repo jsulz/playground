@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}| Birthday Paradox{% endblock %}
+{% block header%}Birthday Paradox{% endblock %}
+
+{% block content%}
+{% if birthdays %}
+{{ birthdays }}
+{% endif %}
+<form action="/birthday-paradox" method="POST">
+    <label for="people">Number of People in Group</label>
+    <input type="number" name="people" id="people">
+    <input type="submit" value="Get Probability!">
+</form>
+
+{% endblock%}
