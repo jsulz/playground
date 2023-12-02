@@ -4,6 +4,7 @@ from flask import render_template
 from random import randint
 from datetime import datetime, timedelta
 import collections
+import os
 
 app = Flask(__name__)
 
@@ -63,3 +64,7 @@ def birthday_paradox():
         return render_template("birthday.html", birthdays=total / 100000)
 
     return render_template("birthday.html")
+
+
+if __name__ == "__main__":
+    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
