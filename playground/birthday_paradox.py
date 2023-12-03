@@ -74,23 +74,9 @@ def birthday_paradox():
 
 
 def build_chart(data):
-    """
-    # Generate the figure **without using pyplot**.
-    fig = Figure()
-    ax = fig.subplots()
-    ax.plot([1, 2])
-    # Save it to a temporary buffer.
-    buf = BytesIO()
-    fig.savefig(buf, format="png")
-    # Embed the result in the html output.
-    data = base64.b64encode(buf.getbuffer()).decode("ascii")
-    return f"data:image/png;base64,{data}"
-    """
     y_vals = list(data.keys())
     y_pos = [0] * len(y_vals)
     x_vals = list(data.values())
-
-    print(y_vals, y_pos, x_vals)
 
     fig = Figure(figsize=(12, 5))
     ax = fig.subplots()

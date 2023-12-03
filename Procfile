@@ -1,1 +1,1 @@
-web: gunicorn --chdir playground --bind :$PORT --timeout 0 playground:app
+web: gunicorn --bind :$PORT --timeout 0 run:app
