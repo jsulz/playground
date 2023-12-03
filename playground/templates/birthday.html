@@ -4,7 +4,14 @@
 {% block header%}Birthday Paradox{% endblock %}
 
 {% block content%}
-{% if birthdays %}
+{% if results %}
+<div>
+    <p>Out of <strong>{{ results.trials }}</strong> trials, <strong>{{ results.total }}</strong> had at least one shared birthday in the group of <strong>{{ results.people }}</strong>.</p>
+
+    <p></p>That means in a group of <strong>{{ results.people }}</strong> there's a <strong>{{ results.probability }}</strong> chance there's at least one shared birthday.</p>
+
+    <img src='{{ results.chart_src }}'/>
+</div>
 {{ birthdays }}
 {% endif %}
 <form action="/birthday-paradox" method="POST">

@@ -1,7 +1,10 @@
 from random import randint
 from datetime import datetime, timedelta
 from collections import Counter
+import base64
+from io import BytesIO
 from flask import Blueprint, request, render_template
+from matplotlib.figure import Figure
 
 bp = Blueprint("birthday_paradox", __name__)
 
@@ -14,8 +17,9 @@ def birthday_paradox():
         total = 0
         count = {}
         random_birthdays = None
-        random_trial = randint(0, 100000)
-        for i in range(100000):
+        trials = 100000
+        random_trial = randint(0, trials)
+        for i in range(trials):
             # Set up a year starting at January 1st
             this_year = datetime(year=2023, month=1, day=1)
             birthdays = []
@@ -52,6 +56,54 @@ def birthday_paradox():
             if shared_birthday:
                 total += 1
 
-        return render_template("birthday.html", birthdays=total / 100000)
+        probability = f"{total / trials:.2%}"
+        count = dict(sorted(count.items()))
+        chart_src = build_chart(count)
+
+        results = {
+            "trials": trials,
+            "total": total,
+            "people": num_people,
+            "probability": probability,
+            "chart_src": chart_src,
+        }
+
+        return render_template("birthday.html", results=results)
 
     return render_template("birthday.html")
+
+
+def build_chart(data):
+    """
+    # Generate the figure **without using pyplot**.
+    fig = Figure()
+    ax = fig.subplots()
+    ax.plot([1, 2])
+    # Save it to a temporary buffer.
+    buf = BytesIO()
+    fig.savefig(buf, format="png")
+    # Embed the result in the html output.
+    data = base64.b64encode(buf.getbuffer()).decode("ascii")
+    return f"data:image/png;base64,{data}"
+    """
+    y_vals = list(data.keys())
+    y_pos = [0] * len(y_vals)
+    x_vals = list(data.values())
+
+    print(y_vals, y_pos, x_vals)
+
+    fig = Figure(figsize=(12, 5))
+    ax = fig.subplots()
+
+    ax.barh(y_vals, x_vals, align="center", color="red")
+    ax.set_yticks(y_vals, labels=y_vals)
+    ax.invert_yaxis()
+    ax.set_xlabel("Count")
+    ax.set_ylabel("Number of Shared Birthdays")
+
+    buf = BytesIO()
+    fig.savefig(buf, format="png")
+
+    chart_data = base64.b64encode(buf.getbuffer()).decode("ascii")
+
+    return f"data:image/png;base64,{chart_data}"
