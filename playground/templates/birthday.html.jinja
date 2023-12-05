@@ -1,0 +1,25 @@
+{% extends "base.html.jinja" %}
+
+{% block title%}| Birthday Paradox {% endblock %}
+{% block header%}Birthday Paradox{% endblock %}
+
+{% block content%}
+{% if results %}
+<div>
+    <p>Out of <strong>{{ results.trials }}</strong> trials, <strong>{{ results.total }}</strong> had at least one shared
+        birthday in the group of <strong>{{ results.people }}</strong>.</p>
+
+    <p></p>That means in a group of <strong>{{ results.people }}</strong> there's a <strong>{{ results.probability
+        }}</strong> chance there's at least one shared birthday.</p>
+
+    <img class="img-fluid" src='{{ results.chart_src }}' />
+</div>
+{{ birthdays }}
+{% endif %}
+<form action="/birthday-paradox" method="POST">
+    <label for="people">Number of People in Group</label>
+    <input type="number" name="people" id="people">
+    <input type="submit" value="Get Probability!">
+</form>
+
+{% endblock%}

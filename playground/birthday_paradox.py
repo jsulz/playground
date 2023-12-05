@@ -68,9 +68,9 @@ def birthday_paradox():
             "chart_src": chart_src,
         }
 
-        return render_template("birthday.html", results=results)
+        return render_template("birthday.html.jinja", results=results)
 
-    return render_template("birthday.html")
+    return render_template("birthday.html.jinja")
 
 
 def build_chart(data):
