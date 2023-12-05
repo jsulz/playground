@@ -78,7 +78,7 @@ def build_chart(data):
     y_pos = [0] * len(y_vals)
     x_vals = list(data.values())
 
-    fig = Figure(figsize=(12, 5))
+    fig = Figure(figsize=(7, 5))
     ax = fig.subplots()
 
     ax.barh(y_vals, x_vals, align="center", color="red")
