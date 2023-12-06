@@ -1,6 +1,43 @@
 /* Show it is fixed to the top */
+:root {
+    --bs-link-color-rgb: #cd2653;
+    --bs-link-color-rgba: #cd26527c;
+    --bs-primary-rgb: #fff;
+    --bs-secondary-rgb: #f5efe0;
+    --bs-body-font-family: 'Open Sans', 'Helvetica Neue', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+::selection {
+    background: var(--bs-link-color-rgba)
+}
+
 body {
     padding-top: 4.5rem;
+    font-family: var(--bs-body-font-family);
+    background: var(--bs-secondary-rgb)
+}
+
+html {
+    font-family: var(--bs-body-font-family)
+}
+
+a, a.nav-link {
+    color: var(--bs-link-color-rgb);
+    text-decoration: underline; 
+}
+
+a.text-body-secondary i {
+    color: var(--bs-link-color-rgb);
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
+}
+
+a:hover, 
+a:active {
+    text-decoration: none;
+}
+
+nav, footer {
+    background: var(--bs-primary-rgb)
 }
 
 footer .bi-github,

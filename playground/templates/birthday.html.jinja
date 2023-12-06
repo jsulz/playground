@@ -4,22 +4,22 @@
 {% block header%}Birthday Paradox{% endblock %}
 
 {% block content%}
-{% if results %}
 <div class="container">
-    <p>Out of <mark>{{ results.trials }}</mark> trials, <mark>{{ results.total }}</mark> had at least one shared
-        birthday in the group of <mark>{{ results.people }}</mark>.</p>
-
-    <p></p>That means in a group of <mark>{{ results.people }}</mark> there's a <mark>{{ results.probability
-        }}</mark> chance there's at least one shared birthday.</p>
-
-    <img class="img-fluid" src='{{ results.chart_src }}' />
-    {{ birthdays }}
-    {% endif %}
-
     <form action="/birthday-paradox" method="POST">
         <label for="people">Number of People in Group</label>
         <input type="number" name="people" id="people">
         <input type="submit" value="Get Probability!">
     </form>
+    {% if results %}
+    <div class="container mb-5 mt-5">
+        <p>Out of <mark>{{ results.trials }}</mark> trials, <mark>{{ results.total }}</mark> had at least one shared
+            birthday in the group of <mark>{{ results.people }}</mark>.</p>
+
+        <p></p>That means in a group of <mark>{{ results.people }}</mark> there's a <mark>{{ results.probability
+            }}</mark> chance there's at least one shared birthday.</p>
+
+        <img class="img-fluid" src='{{ results.chart_src }}' />
+    </div>
+    {% endif %}
 </div>
 {% endblock%}
