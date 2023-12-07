@@ -1,0 +1,35 @@
+{% extends 'base.html.jinja' %}
+{% block header %} <h1 style="text-align: center; font-weight: 800; font-size: 70px">About</h1> {%
+endblock %}
+{% block content %}
+<div class="p-2 mb-4 bg-body-tertiary rounded-3">
+    <div class="container-fluid py-5">
+        <div class="col-md-10">
+            <p>This site was started as a way for me to take pet projects that would normally only be run locally and
+                put them on the world wide web. It came about as I began writing code again after a few years away from
+                a text editor in an effort to prove that I still knew how to play with the ones and zeros that power
+                many of our waking moments. As my confidence in my ability grows, I hope the size of these projects does
+                as well.</p>
+            </p>The site is simple, and for good reason. It's a playground! Nothing here is meant for a production
+            context in the truest sense of the word, but I've done my best to mimic a real-world setup. It's hosted on
+            Google's public cloud using Cloud Run with our friends from Cloudflare gamely resolving domain requests. The
+            rest of the tech stack is as follows:</p>
+            <ul>
+                <li><a href="https://flask.palletsprojects.com/en/3.0.x/">Flask</a> and <a
+                        href="https://jinja.palletsprojects.com/en/3.1.x/">Jinja</a> (powering the back and front-end)
+                </li>
+                <li><a href="https://gunicorn.org/">Gunicorn</a> (making sure the back-end and front-end can actually be
+                    served)</li>
+                <li><a href="https://getbootstrap.com/">Bootstrap</a> (making things look pretty)</li>
+                <li><a href="https://react.dev/">React</a> and <a href="https://www.typescriptlang.org/">Typescript</a>
+                    (when I want to make things act pretty)</li>
+                <li><a href="https://github.com/">GitHub</a> and <a href="https://github.com/features/actions">GitHub
+                        Actions</a> (getting the code from my machine to Google's)</li>
+                <li><a href="https://matplotlib.org/">Matplotlib</a> (making charts)</li>
+            </ul>
+            <p>If you want to see some of the projects in action, <a href="/">check out the
+                    homepage</a>, and thanks for visiting!</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
