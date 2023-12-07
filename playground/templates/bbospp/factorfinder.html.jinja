@@ -1,0 +1,54 @@
+{% extends "base.html.jinja" %}
+
+{% block title%}| Factor Finder {% endblock %}
+{% block header%}Factor Finder{% endblock %}
+
+{% block content%}
+<div class="row justify-content-center">
+    <div class="p-2 mb-4 bg-body-tertiary rounded-3 col-10">
+        <div class="container-fluid py-5">
+            <div class="col-md-12">
+                <p>The motivation for this comes from The <a
+                        href="https://nostarch.com/big-book-small-python-projects">Big Book of Small Python
+                        Projects</a>. This is <a href="https://inventwithpython.com/bigbookpython/project2.html">#34,
+                        Factor Finder.</a></p>
+                <div class="row mt-5">
+                    <form action="/factor-finder" method="POST">
+                        <div class="mb-3 col-md-6">
+                            <label for="factor" class="form-label">Number to find factors for</label>
+                            <input type="number" class="form-control" name="factor" id="factor">
+                        </div>
+                        <input type="submit" value="Find Factors!">
+                    </form>
+                </div>
+                {% if results %}
+                <div class="mb-5 mt-5">
+                    {% if results.error %}
+                    <p>Sorry, the value you entered <mark>was not a number</mark>! Please try again.</p>
+                    {% else %}
+                    <p><mark>{{ results.number }}</mark> has <mark>{{ results.total_factors }}</mark> factors. They are:
+                    </p>
+                    <p class="user-select-all">{{ results.factors }}</p>
+                    <button type="button" id="copy-select-all" class="btn btn-primary">Click to copy the
+                        factors!</button>
+                    <div class="toast-container position-fixed bottom-0 end-0 p-5">
+                        <div class="toast align-items-center" id="liveToast" role="alert" aria-live="assertive"
+                            aria-atomic="true">
+                            <div class="d-flex">
+                                <div class="toast-body">
+                                    Copied!
+                                </div>
+                                <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"
+                                    aria-label="Close"></button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock%}
