@@ -1,11 +1,16 @@
-/* Show it is fixed to the top */
+/* CSS Variable overrides */
 :root {
     --bs-link-color-rgb: #cd2653;
     --bs-link-color-rgba: #cd26527c;
     --bs-primary-rgb: #fff;
     --bs-secondary-rgb: #f5efe0;
     --bs-body-font-family: 'Open Sans', 'Helvetica Neue', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --bs-tertiary-rgb: #309ca1;
+    --bs-tertiary-rgb-active: #216b6f;
+    --bs-btn-hover-color: var(--bs-tertiary-rgb-active)
 }
+
+/* Global */
 
 ::selection {
     background: var(--bs-link-color-rgba)
@@ -26,6 +31,10 @@ a, a.nav-link {
     text-decoration: underline; 
 }
 
+mark {
+    background: var(--bs-link-color-rgba);
+}
+
 a.text-body-secondary i {
     color: var(--bs-link-color-rgb);
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
@@ -36,10 +45,25 @@ a:active {
     text-decoration: none;
 }
 
+/* Buttons */
+.btn.btn-primary {
+    background: var(--bs-tertiary-rgb);
+    border-color: var(--bs-tertiary-rgb);
+}
+
+.btn.btn-primary:hover,
+.btn.btn-primary:active,
+.btn.btn-primary:target {
+    background: var(--bs-tertiary-rgb-active);
+    border-color: var(--bs-tertiary-rgb-active);
+}
+
+/* Navigation */
 nav, footer {
     background: var(--bs-primary-rgb)
 }
 
+/* Footer */
 footer .bi-github,
 footer .bi-linkedin {
     font-size: 1.75rem

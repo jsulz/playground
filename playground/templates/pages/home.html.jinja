@@ -1,0 +1,50 @@
+{% extends "base.html.jinja" %}
+{% block header %} <h1 style="font-weight: 800; font-size: 70px">Welcome to the Playground</h1> {%
+endblock %}
+{% block content %}
+<div class="p-2 mb-4 bg-body-tertiary rounded-3">
+    <div class="container-fluid py-5">
+        <div class="col-md-10">
+            <p class="lead">Hello, my name is <a href="https://www.linkedin.com/in/jaredsulzdorf">Jared Sulzdorf</a>,
+                and this is my playground.
+            <p>This small, spunky website is dedicated to exploring new technologies, tinkering with toy projects, and
+                in general, just playing around. If you're curious, you can <a href="/about">read more about what's
+                    going on under the hood</a>.</p>
+            <p>Feel free to explore some of the sandboxes below and if you have any questions or just want to chat, <a
+                    href="https://www.jsulz.com/contact">my blog's contact page</a> should point you in the right
+                direction <i class="bi-emoji-smile"></i></p>
+            </p>
+        </div>
+    </div>
+</div>
+<div class="container mb-5">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+        <div class="col pb-2 d-flex align-items-stretch">
+            <div class="card">
+                <div class="card-header">
+                    Big Book of Small Python Projects
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Birthday Paradox</h5>
+                    <p class="card-text">How many people in a group are needed before the probability at least two share
+                        the same birthday?</p>
+                    <a href="/birthday-paradox" class="align-bottom btn btn-primary">Find out for yourself</a>
+                </div>
+            </div>
+        </div>
+        <div class="col pb-2 d-flex align-items-stretch">
+            <div class="card">
+                <div class="card-header">
+                    Big Book of Small Python Projects
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Factor Finder</h5>
+                    <p class="card-text">Want to know all the factors of a given number? What about if the number is
+                        prime? You bet you do.</p>
+                    <a href="#" class="mt-auto btn btn-primary">Find factors</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

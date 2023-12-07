@@ -1,9 +1,9 @@
-{% include "header.html.jinja" %}
+{% include "partials/header.html.jinja" %}
 <title> jsulz | Playground {% block title %}{% endblock %}</title>
 </head>
 
 <body class="d-flex flex-column h-100">
-  {% include "nav.html.jinja" %}
+  {% include "partials/nav.html.jinja" %}
   <main class="flex-shrink-0 mt-3">
     <div class="container">
       <h1>
@@ -15,4 +15,4 @@
       {% block content %}{% endblock %}
     </div>
   </main>
-  {% include "footer.html.jinja" %}
+  {% include "partials/footer.html.jinja" %}

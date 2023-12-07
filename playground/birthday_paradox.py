@@ -6,7 +6,7 @@ from io import BytesIO
 from flask import Blueprint, request, render_template
 from matplotlib.figure import Figure
 
-bp = Blueprint("birthday_paradox", __name__)
+bp = Blueprint("birthday_paradox", __name__, template_folder="templates")
 
 
 @bp.route("/birthday-paradox", methods=["GET", "POST"])
@@ -68,9 +68,9 @@ def birthday_paradox():
             "chart_src": chart_src,
         }
 
-        return render_template("birthday.html.jinja", results=results)
+        return render_template("bbospp/birthday.html.jinja", results=results)
 
-    return render_template("birthday.html.jinja")
+    return render_template("bbospp/birthday.html.jinja")
 
 
 def build_chart(data):
