@@ -45,6 +45,13 @@ a:active {
     text-decoration: none;
 }
 
+/* Page styles */
+.page-header {
+    text-align: center; 
+    font-weight: 800; 
+    font-size: 70px
+}
+
 /* Buttons */
 .btn.btn-primary {
     background: var(--bs-tertiary-rgb);

@@ -11,8 +11,22 @@ bp = Blueprint("birthday_paradox", __name__, template_folder="templates")
 
 @bp.route("/birthday-paradox", methods=["GET", "POST"])
 def birthday_paradox():
+    """Handles the form post and runs a series of trials to get a probability.
+
+    Returns:
+        template: A template response.
+    """
     if request.method == "POST":
-        num_people = int(request.form["people"])
+        num_people = None
+        results = {}
+        try:
+            num_people = int(request.form["people"])
+        except ValueError:
+            results["error"] = True
+            return render_template("bbospp/birthday.html.jinja", results=results)
+
+        results["people"] = num_people
+        results["error"] = False
 
         total = 0
         count = {}
@@ -60,13 +74,11 @@ def birthday_paradox():
         count = dict(sorted(count.items()))
         chart_src = build_chart(count)
 
-        results = {
-            "trials": trials,
-            "total": total,
-            "people": num_people,
-            "probability": probability,
-            "chart_src": chart_src,
-        }
+        results["trials"] = trials
+        results["total"] = total
+        results["people"] = num_people
+        results["probability"] = probability
+        results["chart_src"] = chart_src
 
         return render_template("bbospp/birthday.html.jinja", results=results)
 
@@ -74,8 +86,16 @@ def birthday_paradox():
 
 
 def build_chart(data):
+    """Creates a bar chart ths shows the count of shared birthdays
+    as a function of the number of trials.
+
+    Args:
+        data (dict): Shows a count:trials pairing for birthdays
+
+    Returns:
+        bytes: Chart data to return in an image.
+    """
     y_vals = list(data.keys())
-    y_pos = [0] * len(y_vals)
     x_vals = list(data.values())
 
     fig = Figure(figsize=(7, 5))
@@ -84,11 +104,11 @@ def build_chart(data):
     ax.barh(y_vals, x_vals, align="center", color="red")
     ax.set_yticks(y_vals, labels=y_vals)
     ax.invert_yaxis()
-    ax.set_xlabel("Count")
+    ax.set_xlabel("Number of Trials")
     ax.set_ylabel("Number of Shared Birthdays")
 
     buf = BytesIO()
-    fig.savefig(buf, format="png")
+    fig.savefig(buf, format="png", transparent=True)
 
     chart_data = base64.b64encode(buf.getbuffer()).decode("ascii")
 

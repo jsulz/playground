@@ -6,7 +6,7 @@
   {% include "partials/nav.html.jinja" %}
   <main class="flex-shrink-0 mt-3">
     <div class="container">
-      <h1>
+      <h1 class="page-header">
         {% block header %}{% endblock %}
       </h1>
       {% for message in get_flashed_messages() %}

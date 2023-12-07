@@ -4,23 +4,56 @@
 {% block header%}Birthday Paradox{% endblock %}
 
 {% block content%}
-<div class="container">
-    <form action="/birthday-paradox" method="POST">
-        <label for="people">Number of People in Group</label>
-        <input type="number" name="people" id="people">
-        <input type="submit" value="Get Probability!">
-    </form>
-    {% if results %}
-    <div class="container mb-5 mt-5">
-        <p>Out of <mark>{{ results.trials }}</mark> trials, <mark>{{ results.total }}</mark> trials had at least one
-            shared
-            birthday in the group of <mark>{{ results.people }}</mark>.</p>
+<div class="row justify-content-center">
+    <div class="p-2 mb-4 bg-body-tertiary rounded-3 col-10">
+        <div class="container-fluid py-5">
+            <div class="col-md-12">
+                <p>The motivation for this comes from The <a
+                        href="https://nostarch.com/big-book-small-python-projects">Big Book of Small Python
+                        Projects</a>. This is <a href="https://inventwithpython.com/bigbookpython/project2.html">#2,
+                        Birthday Pardox.</a></p>
+                <p>More commonly known as the "<a href="https://en.wikipedia.org/wiki/Birthday_problem">birthday
+                        problem</a>", this is relatively straightforward, but may defy the
+                    way you think about probabilities at first. The question asks for the probability that, given
+                    <i>n</i> random people, at least two will share a birthday (note that this is not asking for the
+                    pair to share the exact birthday in the sense of year and day, but rather just the same day in any
+                    year).
+                </p>
+                <p>As you'll see, the number of people that it takes to make the odds better than a coin flip are
+                    surprisingly low!</p>
+                <div class="row mt-5">
+                    <form action="/birthday-paradox" method="POST">
+                        <div class="mb-3 col-md-6">
+                            <label for="people" class="form-label">Number of People in Group</label>
+                            <input type="number" class="form-control" name="people" id="people">
+                        </div>
+                        <input type="submit" value="Get Probability!">
+                    </form>
+                </div>
+                {% if results %}
+                <div class="mb-5 mt-5">
+                    {% if results.error %}
+                    <p>Sorry, the value you entered <mark>was not a number</mark>! Please try again.</p>
+                    {% else %}
+                    <p>Out of <mark>{{ results.trials }}</mark> trials, <mark>{{ results.total }}</mark> trials had at
+                        least one shared birthday in the group of <mark>{{ results.people }}</mark>. That means in a
+                        group of <mark>{{ results.people }}</mark> there's a <mark>{{ results.probability }}</mark>
+                        chance there's at least one shared birthday.</p>
 
-        <p></p>That means in a group of <mark>{{ results.people }}</mark> there's a <mark>{{ results.probability
-            }}</mark> chance there's at least one shared birthday.</p>
+                    {% if results.people > 23 %}
+                    <p>You're above the threshold to make the probability better than a coinflip!</p>
+                    {% else %}
+                    <p>These odds are still worse than a coin flip. Maybe increase the number of people in the group to
+                        see what happens.</p>
+                    {% endif %}
 
-        <img class="img-fluid" src='{{ results.chart_src }}' />
+                    <img class="img-fluid" src='{{ results.chart_src }}' />
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
     </div>
-    {% endif %}
+</div>
 </div>
 {% endblock%}
