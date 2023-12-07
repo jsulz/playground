@@ -79,7 +79,7 @@ def build_chart(data):
     x_vals = list(data.values())
 
     fig = Figure(figsize=(7, 5))
-    ax = fig.subplots()
+    ax = fig.add_subplot()
 
     ax.barh(y_vals, x_vals, align="center", color="red")
     ax.set_yticks(y_vals, labels=y_vals)
