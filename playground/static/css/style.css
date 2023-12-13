@@ -49,8 +49,18 @@ a:active {
 .page-header {
     text-align: center; 
     font-weight: 800; 
-    font-size: 70px
 }
+
+.page-header {
+    font-size: calc(2rem + 3.3vw);
+  }
+  
+  @media (min-width: 1200px) {
+    .page-header {
+      font-size: 4rem;
+    }
+  }
+  
 
 /* Buttons */
 .btn.btn-primary {

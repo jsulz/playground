@@ -10,8 +10,13 @@
             <div class="col-md-12">
                 <p>The motivation for this comes from The <a
                         href="https://nostarch.com/big-book-small-python-projects">Big Book of Small Python
-                        Projects</a>. This is <a href="https://inventwithpython.com/bigbookpython/project2.html">#34,
+                        Projects</a>. This is <a href="https://inventwithpython.com/bigbookpython/project24.html">#24,
                         Factor Finder.</a></p>
+                <p>Factors are a common mathematical concept. A number <i>x</i> is a factor of another number, <i>y</i>,
+                    if and only if <i>x</i> can evenly divide <i>y</i>. A number that has no factors other than 1 and
+                    itself is a prime number. Prime numbers play a role in fields like cryptography and number theory.
+                </p>
+                <p>If you find a prime number as you search for factors, you're in for a treat!</p>
                 <div class="row mt-5">
                     <form action="/factor-finder" method="POST">
                         <div class="mb-3 col-md-6">
@@ -26,7 +31,10 @@
                     {% if results.error %}
                     <p>Sorry, the value you entered <mark>was not a number</mark>! Please try again.</p>
                     {% else %}
-                    <p><mark>{{ results.number }}</mark> has <mark>{{ results.total_factors }}</mark> factors. They are:
+                    <p><mark>{{ results.number }}</mark> has <mark>{{ results.total_factors }}</mark> factors. {% if
+                        results.prime %} Wow, you find a <mark>prime number</mark> check <a
+                            href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">this out</a> as a treat!{% endif %} The
+                        factors are:
                     </p>
                     <p class="user-select-all">{{ results.factors }}</p>
                     <button type="button" id="copy-select-all" class="btn btn-primary">Click to copy the

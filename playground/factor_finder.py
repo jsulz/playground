@@ -1,8 +1,5 @@
 import math
-import base64
-from io import BytesIO
 from flask import Blueprint, request, render_template
-from matplotlib.figure import Figure
 
 ff = Blueprint("factor_finder", __name__, template_folder="templates")
 
