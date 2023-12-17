@@ -30,6 +30,22 @@
         })
     }
 
+    const diceCount = document.getElementById('dicecount')
+    const diceCountLabel = document.getElementById('dicecountBlock')
+    if(diceCount) {
+        diceCountLabel.textContent = "Dice: " + diceCount.value
+        diceCount.addEventListener('input', (event) => {
+            diceCountLabel.textContent = "Dice: " + event.target.value
+        })
+    }
+
+    const diceSides = document.getElementById('dicesides')
+    const diceSidesLabel = document.getElementById('dicesideBlock')
+    if(diceSides) {
+        diceSidesLabel.textContent = "Sides: " + diceSides.value
+        diceSides.addEventListener('input', (event) => {
+            diceSidesLabel.textContent = "Sides: " + event.target.value
+        })
+    }
   
-  console.log('hello world')
 })()

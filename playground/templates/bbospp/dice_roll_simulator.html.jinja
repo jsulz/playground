@@ -1,0 +1,45 @@
+{% extends "base.html.jinja" %}
+
+{% block title%}| Million Dice Statistics {% endblock %}
+{% block header%}Million Dice Statistics{% endblock %}
+
+{% block content%}
+<div class="row justify-content-center">
+    <div class="p-2 mb-4 bg-body-tertiary rounded-3 col-10">
+        <div class="container-fluid py-5">
+            <div class="col-md-12">
+                <p>The motivation for this comes from The <a
+                        href="https://nostarch.com/big-book-small-python-projects">Big Book of Small Python
+                        Projects</a>. This is <a href="https://inventwithpython.com/bigbookpython/project46.html">#46,
+                        Million Dice Roll Statistics Simulator.</a></p>
+                <div class="row mt-5">
+                    <form action="/million-dice-statistics" method="POST">
+                        <div class="mb-3 col-md-12">
+                            <label for="dicecount" class="form-label">Number of Dice</label>
+                            <input type="range" class="form-range" value="2" min="1" max="10" step="1" id="dicecount"
+                                aria-describedby="dicecountBlock">
+                            <div id="dicecountBlock" class="form-text">Current number:</div>
+                            <label for="dicesides" class="form-label">Dice Sides</label>
+                            <input type="range" class="form-range" value="6" min="1" max="20" step="1" id="dicesides"
+                                aria-describedby="dicesideBlock">
+                            <div id="dicesideBlock" class="form-text">Current number:</div>
+                        </div>
+                        <input type="submit" value="Get Probability!">
+                    </form>
+                </div>
+                {% if results %}
+                <div class="mb-5 mt-5">
+                    {% if results.error %}
+                    <p>Sorry, the value you entered <mark>was not a number</mark>! Please try again.</p>
+                    {% else %}
+                    <p>Success!</p>
+                    <img class="img-fluid" src='{{ results.chart_src }}' />
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock%}
