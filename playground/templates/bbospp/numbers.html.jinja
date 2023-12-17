@@ -13,8 +13,8 @@
                         Projects</a>. This is a riff on <a
                         href="https://inventwithpython.com/bigbookpython/project52.html">#52,
                         Numeral System Counters.</a></p>
-                <form action="/million-dice-statistics" method="POST">
-                    <div class="mb-3 row">
+                <form action="/numeral-system-converter" method="POST">
+                    <div class="mb-2 row">
                         <div class="col-3">
                             <label for="convert-from">Converting <mark>From</mark></label>
                             <select class="form-select" name="convert-from" id="">
@@ -34,21 +34,24 @@
                             </select>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="mb-2 row">
                         <div class="col-6">
                             <label for="number" class="form-label">Convert</label>
-                            <input type="text" name="number" class="form-control" id="number">
+                            <input type="number" name="number" class="form-control" id="number">
                         </div>
                     </div>
+                    <input type="submit" value="Get it!">
                 </form>
                 {% if results %}
-                <div class="mb-5 mt-5">
+                <div class="mt-5">
                     {% if results.error %}
-                    <p>Sorry, the value you entered <mark>was not a number</mark> or was an attempt to convert to
-                        something that we don't allow. Please try again!.</p>
+                    <p>Sorry, the value you entered <mark>was not a number</mark> or was an attempt to convert from one
+                        number format to another without providing the input in the proper form. Please try again!</p>
                     {% else %}
-                    <input class="form-control" type="text" value="Disabled readonly input"
+                    <label for="results" class="form-label">Results: </label>
+                    <input class="form-control" name="results" type="text" value='{{ results.convert_to }}'
                         aria-label="Disabled input example" disabled readonly>
+                    <div id="resultsBlock" class="form-text">Converting from: {{ results.convert_from }}</div>
                     {% endif %}
                 </div>
                 {% endif %}
