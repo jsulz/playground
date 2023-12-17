@@ -1,0 +1,53 @@
+{% extends "base.html.jinja" %}
+
+{% block title%}| Pig Latin Encoder {% endblock %}
+{% block header%}Pig Latin Encoder{% endblock %}
+
+{% block content%}
+<div class="row justify-content-center">
+    <div class="p-2 mb-4 bg-body-tertiary rounded-3 col-10">
+        <div class="container-fluid py-5">
+            <div class="col-md-12">
+                <p>The motivation for this comes from The <a
+                        href="https://nostarch.com/big-book-small-python-projects">Big Book of Small Python
+                        Projects</a>. This is a riff on <a
+                        href="https://inventwithpython.com/bigbookpython/project54.html">#54,
+                        Pig Latin.</a></p>
+                <form action="/pig-latin-encoder" method="POST">
+                    <div class="mb-3">
+                        <label for="message" class="form-label">Message to Encode</label>
+                        <textarea class="form-control" id="message" rows="5" name="message" required></textarea>
+                    </div>
+                    <input type="submit" value="Encode!">
+                </form>
+                {% if results %}
+                <div class="mt-5">
+                    {% if results.error %}
+                    <p>Sorry, one of the values you entered was an integer. The pig latin encoder can only deal with
+                        strings. Please remove the following numbers from your text:</p>
+                    {% else %}
+                    <p>Encoded message:</p>
+                    <p class="user-select-all">{{ results.encoded }}</p>
+                    <button type="button" id="copy-select-all" class="btn btn-primary">Click to copy the encoded
+                        message!</button>
+                    <div class="toast-container position-fixed bottom-0 end-0 p-5">
+                        <div class="toast align-items-center" id="liveToast" role="alert" aria-live="assertive"
+                            aria-atomic="true">
+                            <div class="d-flex">
+                                <div class="toast-body">
+                                    Copied!
+                                </div>
+                                <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"
+                                    aria-label="Close"></button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock%}
