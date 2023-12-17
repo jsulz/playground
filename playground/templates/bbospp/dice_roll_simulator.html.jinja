@@ -12,27 +12,35 @@
                         href="https://nostarch.com/big-book-small-python-projects">Big Book of Small Python
                         Projects</a>. This is <a href="https://inventwithpython.com/bigbookpython/project46.html">#46,
                         Million Dice Roll Statistics Simulator.</a></p>
-                <div class="row mt-5">
-                    <form action="/million-dice-statistics" method="POST">
-                        <div class="mb-3 col-md-12">
+                <form action="/million-dice-statistics" method="POST">
+                    <div class="row mt-5 row-cols-md-2">
+                        <div class="col">
                             <label for="dicecount" class="form-label">Number of Dice</label>
-                            <input type="range" class="form-range" value="2" min="1" max="10" step="1" id="dicecount"
-                                aria-describedby="dicecountBlock">
+                            <input type="range" class="form-range" value="2" min="1" max="10" step="1" name="dicecount"
+                                id="dicecount" aria-describedby="dicecountBlock">
                             <div id="dicecountBlock" class="form-text">Current number:</div>
+                        </div>
+                        <div class="col mb-3">
                             <label for="dicesides" class="form-label">Dice Sides</label>
-                            <input type="range" class="form-range" value="6" min="1" max="20" step="1" id="dicesides"
-                                aria-describedby="dicesideBlock">
+                            <input type="range" class="form-range" value="6" min="1" max="20" step="1" name="dicesides"
+                                id="dicesides" aria-describedby="dicesideBlock">
                             <div id="dicesideBlock" class="form-text">Current number:</div>
                         </div>
                         <input type="submit" value="Get Probability!">
-                    </form>
-                </div>
+                    </div>
+                </form>
                 {% if results %}
                 <div class="mb-5 mt-5">
                     {% if results.error %}
-                    <p>Sorry, the value you entered <mark>was not a number</mark>! Please try again.</p>
+                    <p>Sorry, the value you entered <mark>was not a number</mark> or the dice/dice sides was greater
+                        than what we allow! Please try again.</p>
                     {% else %}
-                    <p>Success!</p>
+                    <p>Excellent! We rolled <mark>{{ results.dice }}</mark> <mark>{{ results.sides }}-sided</mark>
+                        dice <mark>{{ results.trials }}</mark> times. Of those, the most likely value to roll was
+                        <mark>{{ results.best.best }}</mark> which was rolled <mark>{{ results.best.count
+                            }}</mark> times resulting in a <mark>{{ results.best.probability }}</mark>
+                        probability of rolling. Check out the chart below to see what values you should be betting on!
+                    </p>
                     <img class="img-fluid" src='{{ results.chart_src }}' />
                     {% endif %}
                 </div>
