@@ -1,0 +1,60 @@
+{% extends "base.html.jinja" %}
+
+{% block title%}| Numeral System Counter {% endblock %}
+{% block header%}Numeral System Counter{% endblock %}
+
+{% block content%}
+<div class="row justify-content-center">
+    <div class="p-2 mb-4 bg-body-tertiary rounded-3 col-10">
+        <div class="container-fluid py-5">
+            <div class="col-md-12">
+                <p>The motivation for this comes from The <a
+                        href="https://nostarch.com/big-book-small-python-projects">Big Book of Small Python
+                        Projects</a>. This is a riff on <a
+                        href="https://inventwithpython.com/bigbookpython/project52.html">#52,
+                        Numeral System Counters.</a></p>
+                <form action="/million-dice-statistics" method="POST">
+                    <div class="mb-3 row">
+                        <div class="col-3">
+                            <label for="convert-from">Converting <mark>From</mark></label>
+                            <select class="form-select" name="convert-from" id="">
+                                <option value="int" selected>Integer</option>
+                                <option value="bin">Binary</option>
+                                <option value="oct">Octal</option>
+                                <option value="hex">Hexadecimal</option>
+                            </select>
+                        </div>
+                        <div class="col-3">
+                            <label for="convert-to">Converting <mark>To</mark></label>
+                            <select class="form-select" name="convert-to" id="">
+                                <option value="int">Integer</option>
+                                <option value="bin" selected>Binary</option>
+                                <option value="oct">Octal</option>
+                                <option value="hex">Hexadecimal</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label for="number" class="form-label">Convert</label>
+                            <input type="text" name="number" class="form-control" id="number">
+                        </div>
+                    </div>
+                </form>
+                {% if results %}
+                <div class="mb-5 mt-5">
+                    {% if results.error %}
+                    <p>Sorry, the value you entered <mark>was not a number</mark> or was an attempt to convert to
+                        something that we don't allow. Please try again!.</p>
+                    {% else %}
+                    <input class="form-control" type="text" value="Disabled readonly input"
+                        aria-label="Disabled input example" disabled readonly>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock%}
