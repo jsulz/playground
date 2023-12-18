@@ -13,10 +13,15 @@
                         Projects</a>. This is a riff on <a
                         href="https://inventwithpython.com/bigbookpython/project52.html">#52,
                         Numeral System Counters.</a></p>
+                <p>This one is for everyone in a computer science program who's had to convert a hex-code into binary
+                    and then into an integer without the help of a handy-dandy converter. If you're looking for
+                    something even more advanced, I'd suggest checking out <a
+                        href="https://www.rapidtables.com/convert/number/index.html">Rapid Table's and their many number
+                        conversion tools</a>.</p>
                 <form action="/numeral-system-converter" method="POST">
                     <div class="mb-2 row">
                         <div class="col-3">
-                            <label for="convert-from">Converting <mark>From</mark></label>
+                            <label for="convert-from">Converting <strong>From</strong></label>
                             <select class="form-select" name="convert-from" id="">
                                 <option value="int" selected>Integer</option>
                                 <option value="bin">Binary</option>
@@ -25,7 +30,7 @@
                             </select>
                         </div>
                         <div class="col-3">
-                            <label for="convert-to">Converting <mark>To</mark></label>
+                            <label for="convert-to">Converting <strong>To</strong></label>
                             <select class="form-select" name="convert-to" id="">
                                 <option value="int">Integer</option>
                                 <option value="bin" selected>Binary</option>
@@ -37,7 +42,7 @@
                     <div class="mb-2 row">
                         <div class="col-6">
                             <label for="number" class="form-label">Convert</label>
-                            <input type="number" name="number" class="form-control" id="number">
+                            <input type="text" name="number" class="form-control" id="number">
                         </div>
                     </div>
                     <input type="submit" value="Get it!">
@@ -45,13 +50,15 @@
                 {% if results %}
                 <div class="mt-5">
                     {% if results.error %}
-                    <p>Sorry, the value you entered <mark>was not a number</mark> or was an attempt to convert from one
-                        number format to another without providing the input in the proper form. Please try again!</p>
+                    <p>Sorry, the value you entered <mark>was not a number</mark> or was an attempt to convert from {{
+                        results.format_from }} to {{results.format_to }} without providing the input in the proper form.
+                        Please try again!</p>
                     {% else %}
                     <label for="results" class="form-label">Results: </label>
                     <input class="form-control" name="results" type="text" value='{{ results.convert_to }}'
                         aria-label="Disabled input example" disabled readonly>
-                    <div id="resultsBlock" class="form-text">Converting from: {{ results.convert_from }}</div>
+                    <div id="resultsBlock" class="form-text">Converting from (originally {{ results.format_from }}): {{
+                        results.convert_from }}</div>
                     {% endif %}
                 </div>
                 {% endif %}

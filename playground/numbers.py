@@ -6,7 +6,12 @@ nsc = Blueprint("numbers", __name__, template_folder="templates")
 @nsc.route("/numeral-system-converter", methods=["GET", "POST"])
 def numerical_system_counter():
     if request.method == "POST":
-        accepted = {"int", "bin", "oct", "hex"}
+        accepted = {
+            "int": "Integer",
+            "bin": "Binary",
+            "oct": "Octal",
+            "hex": "Hexadecimal",
+        }
         results = {}
         if request.form["convert-from"] not in accepted:
             results["error"] = True
@@ -16,6 +21,10 @@ def numerical_system_counter():
             return render_template("bbospp/numbers.html.jinja", results=results)
 
         convert = {"int": 10, "bin": 2, "oct": 8, "hex": 16}
+        format_from = accepted[request.form["convert-from"]]
+        format_to = accepted[request.form["convert-to"]]
+        results["format_from"] = format_from.lower()
+        results["format_to"] = format_to.lower()
 
         try:
             num = int(request.form["number"], convert[request.form["convert-from"]])
@@ -35,7 +44,7 @@ def numerical_system_counter():
             new_num = str(num)
 
         results["convert_to"] = new_num
-        results["convert_from"] = num
+        results["convert_from"] = request.form["number"]
 
         return render_template("bbospp/numbers.html.jinja", results=results)
 
