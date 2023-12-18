@@ -13,6 +13,20 @@
                         Projects</a>. This is a riff on <a
                         href="https://inventwithpython.com/bigbookpython/project54.html">#54,
                         Pig Latin.</a></p>
+                <p>To read more about the rules of of Pig Latin, as always, refer to the Wikipedia page. As there is
+                    some flexibility with respect to how the rules are implemented, here are some things to know about
+                    this encoder: </p>
+                <ul>
+                    <li>Digits (e.g., <code>123</code>) are not encoded. If you want them encoded, provide the
+                        string-literal
+                        representation (e.g., <code>one-hundred and twenty three</code>)</li>
+                    <li>Title-case is preserved (e.g., <code>Test</code> becomes <code>Estay</code>)</li>
+                    <li>Capital-case is preserved, but the encoded text is not capitalized (e.g., <code>CIA</code>
+                        becomes <code>IACay</code>)</li>
+                    <li>Words that begin with a vowel have <code>way</code> appended to them</li>
+                    <li>Punctuation is preserved (e.g., <code>what????</code> becomes <code>hatway????)</code></li>
+                </ul>
+                <p>If you have any issues at all, please <a href="https://www.jsulz.com/contact">contact me</a>!</p>
                 <form action="/pig-latin-encoder" method="POST">
                     <div class="mb-3">
                         <label for="message" class="form-label">Message to Encode</label>
@@ -23,11 +37,18 @@
                 {% if results %}
                 <div class="mt-5">
                     {% if results.error %}
-                    <p>Sorry, one of the values you entered was an integer. The pig latin encoder can only deal with
-                        strings. Please remove the following numbers from your text:</p>
-                    {% else %}
-                    <p>Encoded message:</p>
-                    <p class="user-select-all">{{ results.encoded }}</p>
+                    <p>Sorry, one of the values you entered was an integer. The pig latin encoder will only encode
+                        strings. If you want these values encoded, remove the following numbers from your text with
+                        their string-literals:</p>
+                    <ul>
+                        {% for digit in results.digits %}
+                        <li>{{ digit }}</li>
+                        {% endfor %}
+                    </ul>
+                    <p>The encoded message below includes these numbers without any modification.</p>
+                    {% endif %}
+                    <h2>Encoded message</h2>
+                    <p style="white-space:pre-wrap" class="user-select-all">{{ results.encoded }}</p>
                     <button type="button" id="copy-select-all" class="btn btn-primary">Click to copy the encoded
                         message!</button>
                     <div class="toast-container position-fixed bottom-0 end-0 p-5">
@@ -42,7 +63,6 @@
                             </div>
                         </div>
                     </div>
-                    {% endif %}
                 </div>
                 {% endif %}
             </div>

@@ -1,3 +1,4 @@
+import re
 from flask import Blueprint, render_template, request
 
 ple = Blueprint("pig-latin-encoder", __name__, template_folder="templates")
@@ -7,16 +8,19 @@ ple = Blueprint("pig-latin-encoder", __name__, template_folder="templates")
 def pig_latin_encoder():
     if request.method == "POST":
         results = {}
+        results["digits"] = set()
         punctuation = {"(", ")", ".", ",", "!", "?", ":", ";", "'", '"'}
         vowels = {"a", "e", "i", "o", "u", "y"}
         # Take the string and split it on ' '
-        message = request.form["message"].split(" ")
+        message = re.findall(r"\S+|\n", request.form["message"])
         for i, word in enumerate(message):
             if word.isdigit():
                 results["error"] = True
-                return render_template(
-                    "bbospp/piglatinencoder.html.jinja", results=results
-                )
+                results["digits"].add(word)
+                continue
+
+            if not word.isalpha():
+                continue
 
             # for each word, first check to see if the end is a puncuation
             # if it is, count how many letters are puncuation and ignore them
@@ -53,4 +57,5 @@ def pig_latin_encoder():
         results["encoded"] = " ".join(message)
 
         return render_template("bbospp/piglatinencoder.html.jinja", results=results)
+
     return render_template("bbospp/piglatinencoder.html.jinja")
