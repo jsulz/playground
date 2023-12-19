@@ -1,0 +1,72 @@
+{% extends "base.html.jinja" %}
+
+{% block title%}| Multiplication Table Generator {% endblock %}
+{% block header%}Multiplication Table Generator{% endblock %}
+
+{% block content%}
+<div class="row justify-content-center">
+    <div class="p-2 mb-4 bg-body-tertiary rounded-3 col-10">
+        <div class="container-fluid py-5">
+            <div class="col-md-12">
+                <p>The motivation for this comes from The <a
+                        href="https://nostarch.com/big-book-small-python-projects">Big Book of Small Python
+                        Projects</a>. This is <a href="https://inventwithpython.com/bigbookpython/project49.html">#49,
+                        Multiplication Table.</a></p>
+                <form action="/mult-table" method="POST">
+                    <div class="row mt-5 row-cols-md-2">
+                        <div class="col">
+                            <label for="firstnumber" class="form-label">First Number</label>
+                            <input type="range" class="form-range" value="10" min="1" max="25" step="1"
+                                name="firstnumber" id="firstnumber" aria-describedby="firstnumberBlock">
+                            <div id="firstnumberBlock" class="form-text">Current number:</div>
+                        </div>
+                        <div class="col mb-3">
+                            <label for="secondnumber" class="form-label">Second Number</label>
+                            <input type="range" class="form-range" value="10" min="1" max="25" step="1"
+                                name="secondnumber" id="secondnumber" aria-describedby="secondnumberBlock">
+                            <div id="secondnumberBlock" class="form-text">Current number:</div>
+                        </div>
+                        <input type="submit" value="Get Table!">
+                    </div>
+                </form>
+                {% if results %}
+                <div class="mb-5 mt-5">
+                    {% if results.error %}
+                    <p>Sorry, one of the values you entered <mark>was not a number</mark> or the numbers were greater
+                        than what we allow! Please try again.</p>
+                    {% else %}
+                    <h2>Generated Table</h2>
+                    <div class="overflow-x-auto">
+                        <table class="table table-striped table-hover">
+                            <tbody>
+                                <tr>
+                                    <th scope="col"></th>
+                                    {% for column in results.table_header %}
+                                    <th scope="col">{{ column }}</th>
+                                    {% endfor %}
+                                </tr>
+                                {% for row in results.table %}
+                                <tr>
+                                    <th scope="row">{{ loop.index0 }}</th>
+                                    {% for column in row %}
+                                    <td>{{ column }}</td>
+                                    {% endfor %}
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <form action="/download-mult-table" method="POST">
+                        <input type="hidden" name="firstnumber" value='{{ results.rows }}'>
+                        <input type="hidden" name="secondnumber" value='{{ results.columns}}'>
+                        <input type="submit" value="Download Table as CSV!">
+                    </form>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock%}

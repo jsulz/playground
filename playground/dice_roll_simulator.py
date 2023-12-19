@@ -15,7 +15,6 @@ def simulate():
         MAX_DICE = 10
         TRIALS = 1000000
         try:
-            print(request.form)
             results["dice"] = int(request.form["dicecount"])
             results["sides"] = int(request.form["dicesides"])
         except ValueError:

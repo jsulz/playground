@@ -47,5 +47,23 @@
             diceSidesLabel.textContent = "Sides: " + event.target.value
         })
     }
+
+    const firstNumber = document.getElementById('firstnumber')
+    const firstNumberLabel = document.getElementById('firstnumberBlock')
+    if(firstNumber) {
+        firstNumberLabel.textContent = "Current Number: " + firstNumber.value
+        firstNumber.addEventListener('input', (event) => {
+            firstNumberLabel.textContent = "Current Number: " + event.target.value
+        })
+    }
+
+    const secondNumber = document.getElementById('secondnumber')
+    const secondNumberLabel = document.getElementById('secondnumberBlock')
+    if(secondNumber) {
+        secondNumberLabel.textContent = "Current Number: " + secondNumber.value
+        secondNumber.addEventListener('input', (event) => {
+            secondNumberLabel.textContent = "Current Number: " + event.target.value
+        })
+    }
   
 })()
