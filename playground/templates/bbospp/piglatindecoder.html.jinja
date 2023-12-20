@@ -38,16 +38,26 @@
                 </form>
                 {% if results %}
                 <div class="mt-5">
-                    {% if results.error %}
-                    <p>Sorry, one of the values you entered was an integer. The pig latin encoder will only encode
-                        strings. If you want these values encoded, remove the following numbers from your text with
-                        their string-literals:</p>
+                    {% if results.digits_error %}
+                    <p>Sorry, one of the values entered contains a digit. The pig latin encoder will only decode
+                        strings. So you are aware, these were the values that weren't decoded:</p>
                     <ul>
                         {% for digit in results.digits %}
                         <li>{{ digit }}</li>
                         {% endfor %}
                     </ul>
                     <p>The encoded message below includes these numbers without any modification.</p>
+                    {% endif %}
+                    {% if results.invalid_error %}
+                    <p>One or more of the words in the encoded message could not be found in the <a
+                            href="https://en.wikipedia.org/wiki/Enchant_(software)">internal dictionary</a> we use. If
+                        the word could not be found, it was not decoded. So you are aware, these are the words that
+                        weren't decoded: </p>
+                    <ul>
+                        {% for invalid in results.invalid %}
+                        <li>{{ invalid }}</li>
+                        {% endfor %}
+                    </ul>
                     {% endif %}
                     <h2>Decoded message</h2>
                     <p style="white-space:pre-wrap" class="user-select-all">{{ results.decoded }}</p>
