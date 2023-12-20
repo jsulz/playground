@@ -6,6 +6,7 @@ ENV APP_HOME /app
 WORKDIR $APP_HOME
 COPY . ./
 
+RUN apt update && apt-get install -y libenchant-2-dev
 RUN pip install --no-cache-dir -r requirements.txt
 ENV HOST 0.0.0.0
 EXPOSE 8888

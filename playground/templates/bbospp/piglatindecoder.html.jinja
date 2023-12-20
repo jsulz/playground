@@ -1,7 +1,7 @@
 {% extends "base.html.jinja" %}
 
-{% block title%}| Pig Latin Encoder {% endblock %}
-{% block header%}Pig Latin Encoder{% endblock %}
+{% block title%}| Pig Latin Decoder {% endblock %}
+{% block header%}Pig Latin Decoder{% endblock %}
 
 {% block content%}
 <div class="row justify-content-center">
@@ -17,24 +17,24 @@
                     some flexibility with respect to how the rules are implemented, here are some things to know about
                     this encoder: </p>
                 <ul>
-                    <li>Digits (e.g., <code>123</code>) are not encoded. If you want them encoded, provide the
+                    <li>Digits (e.g., <code>3ay</code>) are not decoded. If you want them decoded, provide the
                         string-literal
-                        representation (e.g., <code>one-hundred and twenty three</code>)</li>
-                    <li>Title-case is preserved (e.g., <code>Test</code> becomes <code>Estay</code>)</li>
-                    <li>Capital-case is preserved, but the encoded text is not capitalized (e.g., <code>CIA</code>
-                        becomes <code>IACay</code>)</li>
-                    <li>Words that begin with a vowel have <code>way</code> appended to them</li>
-                    <li>Punctuation is preserved (e.g., <code>what????</code> becomes <code>hatway????)</code></li>
+                        representation (e.g., <code>eethray</code>)</li>
+                    <li>Title-case is preserved (e.g., <code>Estay</code> becomes <code>Test</code>)</li>
+                    <li>Capital-case is preserved (e.g., <code>IACay</code>
+                        becomes <code>CIA</code>)</li>
+                    <li>The decoder cues in on <code>way</code> as the suffice to words that begin with a vowel
+                    <li>Punctuation is preserved (e.g., <code>hatway????</code> becomes <code>what????)</code></li>
                 </ul>
                 <p>If you have any issues at all, please <a href="https://www.jsulz.com/contact">contact me</a>!</p>
-                <p><strong>Note:</strong> Want to decode a message? Head over to the <a href="/pig-latin-decoder">Pig
-                        Latin Decoder</a>.</p>
-                <form action="/pig-latin-encoder" method="POST">
+                <p><strong>Note:</strong> Want to encode a message? Head over to the <a href="/pig-latin-encoder">Pig
+                        Latin Encoder</a>.</p>
+                <form action="/pig-latin-decoder" method="POST">
                     <div class="mb-3">
-                        <label for="message" class="form-label">Message to Encode</label>
+                        <label for="message" class="form-label">Message to Decode</label>
                         <textarea class="form-control" id="message" rows="5" name="message" required></textarea>
                     </div>
-                    <input type="submit" value="Encode!">
+                    <input type="submit" value="Decode!">
                 </form>
                 {% if results %}
                 <div class="mt-5">
@@ -49,8 +49,8 @@
                     </ul>
                     <p>The encoded message below includes these numbers without any modification.</p>
                     {% endif %}
-                    <h2>Encoded message</h2>
-                    <p style="white-space:pre-wrap" class="user-select-all">{{ results.encoded }}</p>
+                    <h2>Decoded message</h2>
+                    <p style="white-space:pre-wrap" class="user-select-all">{{ results.decoded }}</p>
                     <button type="button" id="copy-select-all" class="btn btn-primary">Click to copy the encoded
                         message!</button>
                     <div class="toast-container position-fixed bottom-0 end-0 p-5">

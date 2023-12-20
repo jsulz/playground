@@ -14,14 +14,6 @@ def pig_latin_encoder():
         # Take the string and split it on ' '
         message = re.findall(r"\S+|\n", request.form["message"])
         for i, word in enumerate(message):
-            if word.isdigit():
-                results["error"] = True
-                results["digits"].add(word)
-                continue
-
-            if not word.isalpha():
-                continue
-
             # for each word, first check to see if the end is a puncuation
             # if it is, count how many letters are puncuation and ignore them
             j = -1
@@ -33,6 +25,20 @@ def pig_latin_encoder():
                 j += 1
                 prefix = word[:j]
                 suffix = word[j:]
+
+            if prefix.find("'") > -1:
+                j = prefix.find("'")
+                suffix = prefix[j:] + suffix
+                prefix = prefix[:j]
+
+            if prefix.isdigit():
+                results["error"] = True
+                results["digits"].add(prefix)
+                continue
+
+            if not prefix.isalpha():
+                continue
+
             # If a word starts with a vowel, just add "way" to the end
             if prefix[0].lower() in vowels:
                 prefix += "way"

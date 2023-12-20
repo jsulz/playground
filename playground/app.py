@@ -6,6 +6,7 @@ from . import dice_roll_simulator
 from . import numbers
 from . import pig_latin_encoder
 from . import multtable
+from . import pig_latin_decoder
 
 
 def create_app(test_config=None):
@@ -19,6 +20,7 @@ def create_app(test_config=None):
     app.register_blueprint(numbers.nsc)
     app.register_blueprint(pig_latin_encoder.ple)
     app.register_blueprint(multtable.mtg)
+    app.register_blueprint(pig_latin_decoder.pld)
 
     app.register_error_handler(404, page_not_found)
 

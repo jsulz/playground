@@ -10,7 +10,8 @@ python = "^3.12"
 flask = "^3.0.0"
 matplotlib = "^3.8.2"
 gunicorn = "^21.2.0"
-
+pyenchant = "^3.2.2"
+pyspellchecker = "^0.7.2"
 
 [build-system]
 requires = ["poetry-core"]
