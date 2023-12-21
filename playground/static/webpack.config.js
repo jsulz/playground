@@ -1,7 +1,7 @@
 const webpack = require('webpack');
 const config = {
     entry:  __dirname + '/scripts/index.js',
-    devtool: 'inline-sources-cheap-source-map',
+    devtool: 'inline-nosources-cheap-source-map',
     output: {
         path: __dirname + '/dist',
         filename: 'bundle.js',
