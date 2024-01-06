@@ -1,5 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import PlaygroundsFirstComponent from "./PlaygroundsFirstComponent";
-  
-ReactDOM.render(<PlaygroundsFirstComponent />, document.getElementById("react-component"));
+
+let reactID = document.getElementById("react-component");
+if (reactID != null ){
+    // Render first component
+    ReactDOM.render(<PlaygroundsFirstComponent />, document.getElementById("react-component"));
+}

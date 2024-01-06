@@ -17,3 +17,8 @@ def about():
 @play.route("/first-react-component")
 def first_component():
     return render_template("react-playground/playgroundsfirstcomponent.html.jinja")
+
+
+@play.route("/gaussian")
+def gaussian():
+    return render_template("react-playground/gaussian.html.jinja")

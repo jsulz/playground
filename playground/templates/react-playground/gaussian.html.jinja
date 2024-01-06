@@ -1,0 +1,20 @@
+{% extends "base.html.jinja" %}
+
+{% block title%}| Gaussian Curves with Recharts {% endblock %}
+{% block header%}Gaussian Curves with Recharts{% endblock %}
+
+{% block content%}
+<div class="row justify-content-center">
+    <div class="p-2 mb-4 bg-body-tertiary rounded-3 col-10">
+        <div class="container-fluid py-5">
+            <div class="col-md-12">
+                <div class="row mt-5">
+                    <div id="gaussian"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<script src="{{ url_for('static', filename='dist/gaussIndex.bundle.js') }}"></script>
+{% endblock%}

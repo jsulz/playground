@@ -1,10 +1,14 @@
 const webpack = require('webpack');
 const config = {
-    entry:  __dirname + '/scripts/index.js',
-    devtool: 'inline-nosources-cheap-source-map',
+  mode: 'production',
+    entry:  {
+      index: __dirname + '/scripts/index.js',
+      gaussIndex: __dirname + '/scripts/gaussIndex.js',
+    },
+    devtool: 'eval-cheap-module-source-map',
     output: {
         path: __dirname + '/dist',
-        filename: 'bundle.js',
+        filename: '[name].bundle.js',
     },
     resolve: {
         extensions: ['.js', '.jsx', '.css']
