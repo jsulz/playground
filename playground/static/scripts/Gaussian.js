@@ -9,19 +9,23 @@ export default function Gaussian() {
     return (
       <>
         <LineCreate newLine={setGauss}/>
-        <LineChart width={800} height={600} data={pdf_data}>
-                <Line type="monotone" dataKey="uv" stroke="#8884d8" />
-                <CartesianGrid stroke="#ccc"/>
-                <XAxis dataKey="val" tickFormatter={(value) => value.toFixed(2)}/>
-                <YAxis domain={[0,1]}/>
-        </LineChart>
-        <LineChart width={800} height={600} data={cdf_data}>
-                <Line type="monotone" dataKey="uv" stroke="#8884d8" />
-                <CartesianGrid stroke="#ccc"/>
-                <XAxis dataKey="val" tickFormatter={(value) => value.toFixed(2)}/>
-                <YAxis/>
-        </LineChart>
+        <GaussChart title="Probability Distribution Function" data={pdf_data}/>
+        <GaussChart title="Cumulative Distribution Function" data={cdf_data}/>
       </>
+    );
+}
+
+const GaussChart = ({title, data}) => {
+    return (
+        <>
+            <h2>{title}</h2>
+            <LineChart width={800} height={600} data={data}>
+                    <Line type="monotone" dataKey="uv" stroke="#8884d8" />
+                    <CartesianGrid stroke="#ccc"/>
+                    <XAxis dataKey="val" tickFormatter={(value) => value.toFixed(2)}/>
+                    <YAxis/>
+            </LineChart>
+        </>
     );
 }
 
