@@ -15,7 +15,7 @@ COPY . ./
 RUN apt update && apt-get install -y libenchant-2-dev
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY --from=build /app/dist/ ./static/dist
+COPY --from=build /app/dist/ /app/playground/static/dist
 
 ENV HOST 0.0.0.0
 EXPOSE 8888
