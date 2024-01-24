@@ -7,6 +7,7 @@ from playground.bbospp import (
     pig_latin_encoder,
     multtable,
 )
+from playground.react_playground import first_react_component, distribution_series
 from . import playground
 
 
@@ -21,6 +22,8 @@ def create_app(test_config=None):
     app.register_blueprint(numbers.nsc)
     app.register_blueprint(pig_latin_encoder.ple)
     app.register_blueprint(multtable.mtg)
+    app.register_blueprint(first_react_component.frc)
+    app.register_blueprint(distribution_series.ds)
 
     app.register_error_handler(404, page_not_found)
 
