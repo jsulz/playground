@@ -1,11 +1,13 @@
 from flask import Flask, render_template
+from playground.bbospp import (
+    birthday_paradox,
+    factor_finder,
+    dice_roll_simulator,
+    numbers,
+    pig_latin_encoder,
+    multtable,
+)
 from . import playground
-from . import birthday_paradox
-from . import factor_finder
-from . import dice_roll_simulator
-from . import numbers
-from . import pig_latin_encoder
-from . import multtable
 
 
 def create_app(test_config=None):
