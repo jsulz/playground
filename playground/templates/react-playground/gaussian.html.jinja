@@ -8,6 +8,26 @@
     <div class="p-2 mb-4 bg-body-tertiary rounded-3 col-10">
         <div class="container-fluid py-5">
             <div class="col-md-12">
+                <p>The <a href="https://en.wikipedia.org/wiki/Normal_distribution">normal distrubution</a> (or, as
+                    it's more commonly known, the "bell curve" and, less commonly known, "Gaussian distribution") is
+                    one of the most widely known probability distributions. Its popularity is in part owed to the <a
+                        href="https://en.wikipedia.org/wiki/Central_limit_theorem">central limit theorem</a>, which
+                    observes that with given a finite mean and variance, the average of many samples of a random
+                    variable will converge to a normal distribution as the number of samples increases. Put more
+                    succinctly, if you plot a bunch of observations of a random variable, chances are you will begin
+                    to see a bell curve.</p>
+                <p>The normal distribution is parameterized by two inputs, the <i>mean</i> and <i>variance</i>. Also
+                    called <i>mu</i> and <i>sigma</i>. You can provide these two parameters in the form below and
+                    see the resulting <a href="https://en.wikipedia.org/wiki/Probability_density_function">probability
+                        density
+                        function (PDF)</a> and <a
+                        href="https://en.wikipedia.org/wiki/Cumulative_distribution_function">cumulative
+                        distribution function (CDF)</a> of a normal distribution with those given parameters. The
+                    PDF was relatively straighforward to produce given mean and sigma as you can deterministicly
+                    return a point on the curve with those two parameters. The CDF was more complex as it required
+                    the <a
+                        href="https://en.wikipedia.org/wiki/Error_function#Approximation_with_elementary_functions">approximation
+                        of the error function</a>.</p>
                 <div class="row mt-5">
                     <div id="gaussian"></div>
                 </div>
