@@ -6,6 +6,7 @@ import {
   XAxis,
   YAxis,
   Tooltip,
+  ResponsiveContainer,
 } from "recharts";
 
 export default function Gaussian() {
@@ -26,13 +27,15 @@ const GaussChart = ({ title, data }) => {
   return (
     <div className="mb-3">
       <h2>{title}</h2>
-      <LineChart width={800} height={600} data={data}>
-        <Line type="monotone" dataKey="uv" stroke="#8884d8" />
-        <CartesianGrid stroke="#ccc" />
-        <XAxis dataKey="val" />
-        <YAxis />
-        <Tooltip />
-      </LineChart>
+      <ResponsiveContainer width="100%" height={500}>
+        <LineChart width={800} height={600} data={data}>
+          <Line type="monotone" dataKey="uv" stroke="#8884d8" />
+          <CartesianGrid stroke="#ccc" />
+          <XAxis dataKey="val" />
+          <YAxis />
+          <Tooltip />
+        </LineChart>
+      </ResponsiveContainer>
     </div>
   );
 };
