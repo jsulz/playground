@@ -1,15 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-const taskList = [
-  { id: uuidv4(), name: "This is a very long task name", status: "todo" },
-  { id: uuidv4(), name: "Thing 2", status: "in-progress" },
-  { id: uuidv4(), name: "Thing 3", status: "done" },
-];
-
 export default function SimpleTodo() {
-  const [taskState, setTaskState] = useState(taskList);
-  //const [taskList, setTaskList] = useState([]);
+  const [taskState, setTaskState] = useState([]);
+
+  useEffect(() => {
+    //setTaskState(JSON.parse(window.localStorage.getItem("taskState")));
+    const value = window.localStorage.getItem("taskState");
+    console.log(value);
+    const valueParse = JSON.parse(value) ? JSON.parse(value) : [];
+    setTaskState(valueParse);
+  }, [taskList]);
+
+  useEffect(() => {
+    window.localStorage.setItem("taskState", JSON.stringify(taskState));
+  }, [taskState]);
+
+  const handleNew = (newTask) => {
+    setTaskState(
+      taskState.concat({ id: uuidv4(), name: newTask.name, status: "todo" })
+    );
+  };
+  const deleteAll = (e) => {
+    e.preventDefault();
+    setTaskState([]);
+  };
+
   const handleEdit = (task_id, newTask) => {
     console.log(newTask);
     const newList = taskState.map((item) => {
@@ -29,7 +45,7 @@ export default function SimpleTodo() {
 
   return (
     <>
-      <AddItem />
+      <AddItem addNew={handleNew} deleteAll={deleteAll} />
       <TodoTable
         tasks={taskState}
         editTask={handleEdit}
@@ -39,10 +55,12 @@ export default function SimpleTodo() {
   );
 }
 
-const AddItem = () => {
+const AddItem = ({ addNew, deleteAll }) => {
   const handleSubmit = (e) => {
-    console.log(e);
     e.preventDefault();
+    const formData = new FormData(e.target);
+    const newTask = Object.fromEntries(formData);
+    addNew(newTask);
   };
   return (
     <div className="row">
@@ -51,7 +69,7 @@ const AddItem = () => {
           <label className="form-label" for="task">
             Task Name
           </label>
-          <input type="text" id="task" name="task" className="form-control" />
+          <input type="text" id="name" name="name" className="form-control" />
         </div>
         <div className="col-md-6 mb-3">
           <button type="submit" className="col me-2  btn btn-primary">
@@ -60,7 +78,7 @@ const AddItem = () => {
           <button
             type="reset"
             className="col btn btn-primary"
-            onClick={handleSubmit}
+            onClick={deleteAll}
           >
             Delete List
           </button>
