@@ -1,16 +1,40 @@
 import React, { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+
+const taskList = [
+  { id: uuidv4(), name: "This is a very long task name", status: "todo" },
+  { id: uuidv4(), name: "Thing 2", status: "in-progress" },
+  { id: uuidv4(), name: "Thing 3", status: "done" },
+];
 
 export default function SimpleTodo() {
-  const taskList = [
-    { name: "This is a very long task name", status: "todo" },
-    { name: "Thing 2", status: "in-progress" },
-    { name: "Thing 3", status: "done" },
-  ];
+  const [taskState, setTaskState] = useState(taskList);
   //const [taskList, setTaskList] = useState([]);
+  const handleEdit = (task_id, newTask) => {
+    console.log(newTask);
+    const newList = taskState.map((item) => {
+      if (item.id == task_id) {
+        item.name = newTask.name;
+        item.status = newTask.status;
+      }
+      return item;
+    });
+    setTaskState(newList);
+  };
+
+  const handleDelete = (id) => {
+    const filteredTaskList = taskState.filter((item) => item.id !== id);
+    setTaskState(filteredTaskList);
+  };
+
   return (
     <>
       <AddItem />
-      <TodoTable tasks={taskList} />
+      <TodoTable
+        tasks={taskState}
+        editTask={handleEdit}
+        deleteTask={handleDelete}
+      />
     </>
   );
 }
@@ -46,7 +70,7 @@ const AddItem = () => {
   );
 };
 
-const TodoTable = ({ tasks }) => {
+const TodoTable = ({ tasks, editTask, deleteTask }) => {
   return (
     <div className="table-responsive-lg">
       <table className="table">
@@ -59,7 +83,13 @@ const TodoTable = ({ tasks }) => {
         </thead>
         <tbody>
           {tasks.map((item, index) => (
-            <TodoItem task={item} key={index} count={index} />
+            <TodoItem
+              task={item}
+              key={item.id}
+              count={index}
+              edit={editTask}
+              delTask={deleteTask}
+            />
           ))}
         </tbody>
       </table>
@@ -67,7 +97,7 @@ const TodoTable = ({ tasks }) => {
   );
 };
 
-const TodoItem = ({ task, count }) => {
+const TodoItem = ({ task, count, edit, delTask }) => {
   let statusClass = null;
   switch (task["status"]) {
     case "todo":
@@ -85,24 +115,117 @@ const TodoItem = ({ task, count }) => {
       break;
   }
   return (
-    <tr>
-      <td>{count + 1}</td>
-      <td>{task["name"]}</td>
-      <td>
-        <button type="button" className={`btn btn-${statusClass}`}>
-          {task["status"].toUpperCase()}
-        </button>
-      </td>
-      <td>
-        <button type="button" className="btn btn-outline-primary">
-          <i class="bi bi-pencil"></i>
-        </button>
-      </td>
-      <td>
-        <button type="button" className="btn btn-outline-primary">
-          <i class="bi bi-trash"></i>
-        </button>
-      </td>
-    </tr>
+    <>
+      <tr>
+        <td>{count + 1}</td>
+        <td>{task["name"]}</td>
+        <td>
+          <button type="button" className={`btn btn-${statusClass}`} disabled>
+            {task["status"].toUpperCase()}
+          </button>
+        </td>
+        <td>
+          <button
+            type="button"
+            className="btn btn-outline-primary"
+            data-bs-toggle="modal"
+            data-bs-target={`#modal-${task.id}`}
+          >
+            <i class="bi bi-pencil"></i>
+          </button>
+        </td>
+        <td>
+          <button
+            type="button"
+            className="btn btn-outline-primary"
+            onClick={() => delTask(task.id)}
+          >
+            <i class="bi bi-trash"></i>
+          </button>
+        </td>
+      </tr>
+      <EditModal task={task} edit={edit} />
+    </>
+  );
+};
+
+const EditModal = ({ task, edit }) => {
+  const handleSave = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const newTask = Object.fromEntries(formData.entries());
+    edit(task.id, newTask);
+  };
+  return (
+    <div
+      class="modal fade"
+      id={`modal-${task.id}`}
+      tabindex="-1"
+      aria-labelledby="taskModal"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="taskLabel">
+              Edit Task
+            </h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form onSubmit={handleSave}>
+              <div class="mb-3">
+                <label for="task" class="col-form-label">
+                  Name:
+                </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="name"
+                  name="name"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="status" class="col-form-label">
+                  Status:
+                </label>
+                <select
+                  class="form-select form-select-sm"
+                  aria-label="Select status"
+                  name="status"
+                >
+                  <option value="todo" selected>
+                    Todo
+                  </option>
+                  <option value="in-progress">In-progress</option>
+                  <option value="done">Done</option>
+                </select>
+              </div>
+              <button
+                type="submit"
+                class="me-2 btn btn-primary"
+                data-bs-dismiss="modal"
+              >
+                Save
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cancel
+              </button>
+            </form>
+          </div>
+          <div class="modal-footer"></div>
+        </div>
+      </div>
+    </div>
   );
 };
