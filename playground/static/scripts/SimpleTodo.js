@@ -5,20 +5,25 @@ export default function SimpleTodo() {
   const [taskState, setTaskState] = useState([]);
 
   useEffect(() => {
-    //setTaskState(JSON.parse(window.localStorage.getItem("taskState")));
     const value = window.localStorage.getItem("taskState");
-    console.log(value);
     const valueParse = JSON.parse(value) ? JSON.parse(value) : [];
     setTaskState(valueParse);
-  }, [taskList]);
+  }, []);
 
   useEffect(() => {
     window.localStorage.setItem("taskState", JSON.stringify(taskState));
   }, [taskState]);
 
   const handleNew = (newTask) => {
+    const today = new Date();
+    const dateString = today.toLocaleString("en-US");
     setTaskState(
-      taskState.concat({ id: uuidv4(), name: newTask.name, status: "todo" })
+      taskState.concat({
+        id: uuidv4(),
+        name: newTask.name,
+        status: "todo",
+        date: dateString,
+      })
     );
   };
   const deleteAll = (e) => {
@@ -91,20 +96,19 @@ const AddItem = ({ addNew, deleteAll }) => {
 const TodoTable = ({ tasks, editTask, deleteTask }) => {
   return (
     <div className="table-responsive-lg">
-      <table className="table">
+      <table className="table table-hover table-striped">
         <thead>
-          <th scope="col">#</th>
+          <th scope="col">Date Created</th>
           <th scope="col">Task</th>
           <th scope="col">Status</th>
           <th scope="col">Edit</th>
           <th scope="col">Delete</th>
         </thead>
-        <tbody>
-          {tasks.map((item, index) => (
+        <tbody class="table-group-divider">
+          {tasks.map((item) => (
             <TodoItem
               task={item}
               key={item.id}
-              count={index}
               edit={editTask}
               delTask={deleteTask}
             />
@@ -115,7 +119,7 @@ const TodoTable = ({ tasks, editTask, deleteTask }) => {
   );
 };
 
-const TodoItem = ({ task, count, edit, delTask }) => {
+const TodoItem = ({ task, edit, delTask }) => {
   let statusClass = null;
   switch (task["status"]) {
     case "todo":
@@ -135,7 +139,7 @@ const TodoItem = ({ task, count, edit, delTask }) => {
   return (
     <>
       <tr>
-        <td>{count + 1}</td>
+        <td>{task["date"]}</td>
         <td>{task["name"]}</td>
         <td>
           <button type="button" className={`btn btn-${statusClass}`} disabled>

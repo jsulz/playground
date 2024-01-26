@@ -8,6 +8,35 @@
     <div class="p-2 mb-4 bg-body-tertiary rounded-3 col-10">
         <div class="container-fluid py-5">
             <div class="col-md-12">
+                <p>I am not a frontend developer. I like data, systems, and backend architecture. Unfortunately, it's
+                    hard to see that sort of work, and so I wanted a reason to keep on stretching my JavaScript/React
+                    chops while also playing with Bootstrap a bit more. This project, the canonical "Make a Todo List
+                    Application" that so many people tackle as they're learning a language, was a way to do just that.
+                </p>
+                <p>This is a "simple" todo list because it's just a single task list without a persistent database. So
+                    there's no way to save multiple lists or associate your list with something
+                    like an account so you could log in from any browser and see your saved items. Instead, you come to
+                    the webpage, do some CRUDing around, leave the webpage, and only find your task list again if you
+                    come back to it from the same browser. Each task has the date it was created, the provided name, the
+                    current status (all tasks start out as ToDo), and options to edit/delete the task.</p>
+                <p>Some fun bits about this project:</p>
+                <ul>
+                    <li>The task list is stored in <a
+                            href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage">localstorage</a>,
+                        so you can at least come back to your list from the
+                        same browser and see your current list.</li>
+                    <li>Editing the list pops up a <a
+                            href="https://getbootstrap.com/docs/5.3/components/modal/">Bootstrap modal</a>, which was
+                        somewhat difficult to work into the React
+                        code, but I didn't want to download the React Bootstrap dependency, so I made it work.</li>
+                    <li>The table holding the tasks is just a <a
+                            href="https://getbootstrap.com/docs/5.3/content/tables/">Bootstrap table</a> with some
+                        striped hovering and active styles for hovers. The
+                        icons for edit/delete are from <a href="https://icons.getbootstrap.com/">Bootstrap Icons</a>.
+                    </li>
+                </ul>
+                <p>To get going, just enter a task name and click <code>Add Task</code> (clicking
+                    <code>Delete List</code> will remove all of the list items.</p>
                 <div class="row mt-5">
                     <div id="simple-todo"></div>
                 </div>
