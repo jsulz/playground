@@ -51,11 +51,17 @@ export default function SimpleTodo() {
   return (
     <>
       <AddItem addNew={handleNew} deleteAll={deleteAll} />
-      <TodoTable
-        tasks={taskState}
-        editTask={handleEdit}
-        deleteTask={handleDelete}
-      />
+      {taskState.length > 0 ? (
+        <TodoTable
+          tasks={taskState}
+          editTask={handleEdit}
+          deleteTask={handleDelete}
+        />
+      ) : (
+        <div className="text-center">
+          <h3>Add a new task to see your task list here.</h3>
+        </div>
+      )}
     </>
   );
 }
@@ -180,45 +186,45 @@ const EditModal = ({ task, edit }) => {
   };
   return (
     <div
-      class="modal fade"
+      className="modal fade"
       id={`modal-${task.id}`}
       tabindex="-1"
       aria-labelledby="taskModal"
       aria-hidden="true"
     >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="taskLabel">
+      <div className="modal-dialog">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h1 className="modal-title fs-5" id="taskLabel">
               Edit Task
             </h1>
             <button
               type="button"
-              class="btn-close"
+              className="btn-close"
               data-bs-dismiss="modal"
               aria-label="Close"
             ></button>
           </div>
           <div class="modal-body">
             <form onSubmit={handleSave}>
-              <div class="mb-3">
-                <label for="task" class="col-form-label">
+              <div className="mb-3">
+                <label for="task" className="col-form-label">
                   Name:
                 </label>
                 <input
                   type="text"
-                  class="form-control"
+                  className="form-control"
                   id="name"
                   name="name"
                   required
                 />
               </div>
-              <div class="mb-3">
-                <label for="status" class="col-form-label">
+              <div className="mb-3">
+                <label for="status" className="col-form-label">
                   Status:
                 </label>
                 <select
-                  class="form-select form-select-sm"
+                  className="form-select form-select-sm"
                   aria-label="Select status"
                   name="status"
                 >
@@ -231,21 +237,21 @@ const EditModal = ({ task, edit }) => {
               </div>
               <button
                 type="submit"
-                class="me-2 btn btn-primary"
+                className="me-2 btn btn-primary"
                 data-bs-dismiss="modal"
               >
                 Save
               </button>
               <button
                 type="button"
-                class="btn btn-secondary"
+                className="btn btn-secondary"
                 data-bs-dismiss="modal"
               >
                 Cancel
               </button>
             </form>
           </div>
-          <div class="modal-footer"></div>
+          <div className="modal-footer"></div>
         </div>
       </div>
     </div>
