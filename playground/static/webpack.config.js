@@ -5,6 +5,7 @@ const config = {
     index: __dirname + "/scripts/index.js",
     gaussIndex: __dirname + "/scripts/gaussIndex.js",
     simpletodoIndex: __dirname + "/scripts/simpletodoIndex.js",
+    urlIndex: __dirname + "/scripts/urlIndex.js",
   },
   devtool: "eval-cheap-module-source-map",
   output: {
