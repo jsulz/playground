@@ -12,6 +12,7 @@ matplotlib = "^3.8.2"
 gunicorn = "^21.2.0"
 pyenchant = "^3.2.2"
 pyspellchecker = "^0.7.2"
+google-cloud-firestore = "^2.14.0"
 
 [build-system]
 requires = ["poetry-core"]
