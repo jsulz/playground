@@ -11,8 +11,8 @@ from playground.react_playground import (
     first_react_component,
     distribution_series,
     simpletodo,
-    url_shortener,
 )
+from playground.coding_challenges import url_shortener
 from . import playground
 
 
