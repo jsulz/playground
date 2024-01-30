@@ -32,7 +32,6 @@ export default function SimpleTodo() {
   };
 
   const handleEdit = (task_id, newTask) => {
-    console.log(newTask);
     const newList = taskState.map((item) => {
       if (item.id == task_id) {
         item.name = newTask.name;
@@ -110,7 +109,7 @@ const TodoTable = ({ tasks, editTask, deleteTask }) => {
           <th scope="col">Edit</th>
           <th scope="col">Delete</th>
         </thead>
-        <tbody class="table-group-divider">
+        <tbody className="table-group-divider">
           {tasks.map((item) => (
             <TodoItem
               task={item}
@@ -159,7 +158,7 @@ const TodoItem = ({ task, edit, delTask }) => {
             data-bs-toggle="modal"
             data-bs-target={`#modal-${task.id}`}
           >
-            <i class="bi bi-pencil"></i>
+            <i className="bi bi-pencil"></i>
           </button>
         </td>
         <td>
@@ -168,7 +167,7 @@ const TodoItem = ({ task, edit, delTask }) => {
             className="btn btn-outline-primary"
             onClick={() => delTask(task.id)}
           >
-            <i class="bi bi-trash"></i>
+            <i className="bi bi-trash"></i>
           </button>
         </td>
       </tr>
@@ -182,8 +181,21 @@ const EditModal = ({ task, edit }) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const newTask = Object.fromEntries(formData.entries());
+    e.target[0].value = "";
     edit(task.id, newTask);
   };
+  const statuses = ["todo", "in-progress", "done"];
+  const options = statuses.map((status) => {
+    if (status === task.status) {
+      return (
+        <option value={status} selected>
+          {status.toUpperCase()}
+        </option>
+      );
+    }
+    return <option value={status}>{status.toUpperCase()}</option>;
+  });
+
   return (
     <div
       className="modal fade"
@@ -205,7 +217,7 @@ const EditModal = ({ task, edit }) => {
               aria-label="Close"
             ></button>
           </div>
-          <div class="modal-body">
+          <div className="modal-body">
             <form onSubmit={handleSave}>
               <div className="mb-3">
                 <label for="task" className="col-form-label">
@@ -217,6 +229,7 @@ const EditModal = ({ task, edit }) => {
                   id="name"
                   name="name"
                   required
+                  placeholder={task.name}
                 />
               </div>
               <div className="mb-3">
@@ -228,11 +241,7 @@ const EditModal = ({ task, edit }) => {
                   aria-label="Select status"
                   name="status"
                 >
-                  <option value="todo" selected>
-                    Todo
-                  </option>
-                  <option value="in-progress">In-progress</option>
-                  <option value="done">Done</option>
+                  {options}
                 </select>
               </div>
               <button
