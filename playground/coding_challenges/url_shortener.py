@@ -12,6 +12,10 @@ def url_shortener():
 
 @url.route("/us/shorten", methods=["POST"])
 def shorten():
+    if request.method != "POST":
+        response = make_response(jsonify({"error": "Method not allowed"}), 405)
+        return response
+
     if not request.is_json:
         response = make_response(
             jsonify({"unsupported": "Unsupported Media Type"}), 415
@@ -73,10 +77,21 @@ def visit(key):
         response = make_response(jsonify({"success": "Deletion success"}), 200)
         return response
 
-    response = make_response(jsonify({"disallowed": "Method not allowed"}), 405)
+    response = make_response(jsonify({"error": "Method not allowed"}), 405)
     return response
 
 
 @url.route("/us/all", methods=["GET"])
 def get_all():
-    pass
+    if request.method == "GET":
+        ds = firestore.Client(project="sylvan-byway-406923", database="url-shortener")
+        docs = ds.collection("urls").stream()
+        response = []
+        for doc in docs:
+            response.append(doc.to_dict())
+
+        response = make_response(jsonify(response), 200)
+        return response
+
+    response = make_response(jsonify({"error": "Method not allowed"}), 405)
+    return response

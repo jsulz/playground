@@ -1,41 +1,75 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 export default function PlaygroundURLShortener() {
-  const urls = [
-    {
-      key: "1234",
-      short_url: "https://www.playground/us/1234",
-      long_url: "https://findtheinvisiblecow.com/",
-    },
-    {
-      key: "1235",
-      short_url: "https://www.playground/us/1235",
-      long_url: "https://www.mapcrunch.com/",
-    },
-    {
-      key: "1236",
-      short_url: "https://www.playground/us/1236",
-      long_url: "https://hackertyper.com/",
-    },
-  ];
+  const [urls, setURLs] = useState(null);
+
+  useEffect(() => {
+    fetch("/us/all")
+      .then((response) => response.json())
+      .then((json) => setURLs(json));
+  }, []);
+
+  const divStyle = {
+    width: "3rem",
+    height: "3rem",
+    textAlign: "center",
+  };
+
   return (
     <>
-      <UrlShortener />
-      <URLs urls={urls} />
+      {urls ? (
+        <>
+          <UrlShortener urls={urls} updateURLs={setURLs} />
+          <UrlTable urls={urls} />
+        </>
+      ) : (
+        <>
+          <UrlShortener />
+          <div
+            style={divStyle}
+            class="text-center spinner-border text-primary"
+            role="status"
+          >
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </>
+      )}
     </>
   );
 }
 
-const UrlShortener = () => {
+const UrlShortener = ({ urls, updateURLs }) => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const formJSON = Object.fromEntries(formData);
+    const options = {
+      method: "POST",
+      cache: "no-cache",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formJSON),
+    };
+    fetch("/us/shorten", options)
+      .then((response) => response.json())
+      .then((json) => {
+        const found = urls.find((url) => url.key === json.key);
+        showToast("URL Added!");
+        if (!found) {
+          updateURLs([json].concat(urls));
+        }
+      });
+  };
   return (
     <div className="col-md-8">
-      <form>
-        <label className="form-label" for="long_url">
+      <form onSubmit={handleSubmit}>
+        <label className="form-label" for="url">
           Short URL
         </label>
         <input
           className="form-control mb-3"
-          name="long_url"
+          name="url"
           placeholder="Enter a URL to shorten here!"
         />
         <button type="submit" class="btn btn-primary mb-3">
@@ -46,7 +80,7 @@ const UrlShortener = () => {
   );
 };
 
-const URLs = ({ urls }) => {
+const UrlTable = ({ urls }) => {
   const handleCopyClick = async (e, url) => {
     try {
       e.preventDefault();
