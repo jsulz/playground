@@ -27,10 +27,10 @@ export default function PlaygroundURLShortener() {
           <UrlShortener />
           <div
             style={divStyle}
-            class="text-center spinner-border text-primary"
+            className="text-center spinner-border text-primary"
             role="status"
           >
-            <span class="visually-hidden">Loading...</span>
+            <span className="visually-hidden">Loading...</span>
           </div>
         </>
       )}
@@ -39,10 +39,18 @@ export default function PlaygroundURLShortener() {
 }
 
 const UrlShortener = ({ urls, updateURLs }) => {
+  const [message, setMessage] = useState(false);
+
+  const handleCopyClick = (e, url) => {
+    e.stopPropagation();
+    copyText(url);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const formJSON = Object.fromEntries(formData);
+    e.target[0].value = "";
     const options = {
       method: "POST",
       cache: "no-cache",
@@ -55,9 +63,37 @@ const UrlShortener = ({ urls, updateURLs }) => {
       .then((response) => response.json())
       .then((json) => {
         const found = urls.find((url) => url.key === json.key);
-        showToast("URL Added!");
         if (!found) {
+          showToast("URL Added!");
           updateURLs([json].concat(urls));
+          const successMessage = (
+            <div>
+              Short URL: <a href={json.short_url}>{json.short_url}</a>
+              <button
+                type="button"
+                className="btn btn-outline-primary btn-sm ms-2"
+                onClick={(e) => handleCopyClick(e, json.short_url)}
+              >
+                <i className="bi bi-clipboard-check"></i>
+              </button>
+            </div>
+          );
+          setMessage(successMessage);
+        } else {
+          const failureMessage = (
+            <div>
+              That URL has already been shortened! Here it is:{" "}
+              <a href={found.short_url}>{found.short_url}</a>
+              <button
+                type="button"
+                className="btn btn-outline-primary btn-sm ms-2"
+                onClick={(e) => handleCopyClick(e, json.short_url)}
+              >
+                <i className="bi bi-clipboard-check"></i>
+              </button>
+            </div>
+          );
+          setMessage(failureMessage);
         }
       });
   };
@@ -72,7 +108,12 @@ const UrlShortener = ({ urls, updateURLs }) => {
           name="url"
           placeholder="Enter a URL to shorten here!"
         />
-        <button type="submit" class="btn btn-primary mb-3">
+        {message && (
+          <div id="passwordHelpBlock" className="form-text mb-3">
+            {message}
+          </div>
+        )}
+        <button type="submit" className="btn btn-primary mb-3">
           Get Short URL
         </button>
       </form>
@@ -85,8 +126,7 @@ const UrlTable = ({ urls }) => {
     try {
       e.preventDefault();
       const text = document.getElementById("id-" + url.key).textContent;
-      await navigator.clipboard.writeText(text);
-      showToast("Copied!");
+      copyText(text);
     } catch (err) {
       console.error("Failed to copy: ", err);
     }
@@ -110,7 +150,7 @@ const UrlTable = ({ urls }) => {
             className="btn btn-outline-primary"
             onClick={(e) => handleCopyClick(e, url)}
           >
-            <i class="bi bi-clipboard-check"></i>
+            <i className="bi bi-clipboard-check"></i>
           </button>
         </td>
         <td>
@@ -119,7 +159,7 @@ const UrlTable = ({ urls }) => {
             className="btn btn-outline-primary"
             onClick={() => handleDeleteClick(url)}
           >
-            <i class="bi bi-trash3"></i>
+            <i className="bi bi-trash3"></i>
           </button>
         </td>
       </tr>
@@ -138,6 +178,11 @@ const UrlTable = ({ urls }) => {
       <tbody>{tableContent}</tbody>
     </table>
   );
+};
+
+const copyText = async (text) => {
+  await navigator.clipboard.writeText(text);
+  showToast("Copied!");
 };
 
 const showToast = (text) => {
