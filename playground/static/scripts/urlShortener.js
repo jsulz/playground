@@ -2,9 +2,21 @@ import React from "react";
 
 export default function PlaygroundURLShortener() {
   const urls = [
-    { key: "1234", short_url: "https://findtheinvisiblecow.com/" },
-    { key: "1235", short_url: "https://www.mapcrunch.com/" },
-    { key: "1236", short_url: "https://hackertyper.com/" },
+    {
+      key: "1234",
+      short_url: "https://www.playground/us/1234",
+      long_url: "https://findtheinvisiblecow.com/",
+    },
+    {
+      key: "1235",
+      short_url: "https://www.playground/us/1235",
+      long_url: "https://www.mapcrunch.com/",
+    },
+    {
+      key: "1236",
+      short_url: "https://www.playground/us/1236",
+      long_url: "https://hackertyper.com/",
+    },
   ];
   return (
     <>
@@ -40,29 +52,21 @@ const URLs = ({ urls }) => {
       e.preventDefault();
       const text = document.getElementById("id-" + url.key).textContent;
       await navigator.clipboard.writeText(text);
-      const toastLive = document.getElementById("liveToast");
-      const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLive);
-      const toastText = document.getElementById("toasting");
-      toastText.textContent = "Copied!";
-      toastBootstrap.show();
+      showToast("Copied!");
     } catch (err) {
       console.error("Failed to copy: ", err);
     }
   };
 
   const handleDeleteClick = (url) => {
-    const toastLive = document.getElementById("liveToast");
-    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLive);
-    const toastText = document.getElementById("toasting");
-    toastText.textContent = "Deleted!";
-    toastBootstrap.show();
+    showToast("Deleted!");
   };
 
   const tableContent = urls.map((url) => {
     return (
       <tr key={url.key}>
         <td>
-          <a href={url.short_url} id={`id-${url.key}`}>
+          <a href={url.short_url} id={`id-${url.key}`} title={url.long_url}>
             {url.short_url}
           </a>
         </td>
@@ -100,4 +104,12 @@ const URLs = ({ urls }) => {
       <tbody>{tableContent}</tbody>
     </table>
   );
+};
+
+const showToast = (text) => {
+  const toastLive = document.getElementById("liveToast");
+  const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLive);
+  const toastText = document.getElementById("toasting");
+  toastText.textContent = text;
+  toastBootstrap.show();
 };
