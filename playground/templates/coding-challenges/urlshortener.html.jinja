@@ -9,6 +9,18 @@
         <div class="container-fluid py-5">
             <div class="col-md-12">
                 <div id="urls"></div>
+                <div class="toast-container position-fixed bottom-0 end-0 p-5">
+                    <div class="toast align-items-center" id="liveToast" role="alert" aria-live="assertive"
+                        aria-atomic="true">
+                        <div class="d-flex">
+                            <div class="toast-body" id="toasting">
+                                Copied!
+                            </div>
+                            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"
+                                aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
