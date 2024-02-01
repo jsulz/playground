@@ -128,7 +128,7 @@ const UrlTable = ({ urls, deleteURLs }) => {
   });
 
   return (
-    <table className="table">
+    <table className="table table-responsive">
       <thead>
         <tr>
           <th>URL</th>
