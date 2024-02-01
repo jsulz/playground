@@ -105,10 +105,6 @@ const UrlShortener = ({ urls, updateURLs }) => {
 };
 
 const UrlTable = ({ urls, deleteURLs }) => {
-  const handleDeleteClick = (url) => {
-    showToast("Deleted!");
-  };
-
   const tableContent = urls.map((url) => {
     return (
       <tr key={url.key}>
@@ -128,16 +124,18 @@ const UrlTable = ({ urls, deleteURLs }) => {
   });
 
   return (
-    <table className="table table-responsive">
-      <thead>
-        <tr>
-          <th>URL</th>
-          <th>Copy</th>
-          <th>Delete</th>
-        </tr>
-      </thead>
-      <tbody>{tableContent}</tbody>
-    </table>
+    <div className="table-responsive-md">
+      <table className="table">
+        <thead>
+          <tr>
+            <th>URL</th>
+            <th>Copy</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody>{tableContent}</tbody>
+      </table>
+    </div>
   );
 };
 
