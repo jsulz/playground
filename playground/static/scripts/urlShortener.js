@@ -20,7 +20,7 @@ export default function PlaygroundURLShortener() {
       {urls ? (
         <>
           <UrlShortener urls={urls} updateURLs={setURLs} />
-          <UrlTable urls={urls} />
+          <UrlTable urls={urls} deleteURLs={setURLs} />
         </>
       ) : (
         <>
@@ -40,11 +40,6 @@ export default function PlaygroundURLShortener() {
 
 const UrlShortener = ({ urls, updateURLs }) => {
   const [message, setMessage] = useState(false);
-
-  const handleCopyClick = (e, url) => {
-    e.stopPropagation();
-    copyText(url);
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -69,13 +64,7 @@ const UrlShortener = ({ urls, updateURLs }) => {
           const successMessage = (
             <div>
               Short URL: <a href={json.short_url}>{json.short_url}</a>
-              <button
-                type="button"
-                className="btn btn-outline-primary btn-sm ms-2"
-                onClick={(e) => handleCopyClick(e, json.short_url)}
-              >
-                <i className="bi bi-clipboard-check"></i>
-              </button>
+              <CopyButton url={json} size_class="btn-sm ms-2" />
             </div>
           );
           setMessage(successMessage);
@@ -84,13 +73,7 @@ const UrlShortener = ({ urls, updateURLs }) => {
             <div>
               That URL has already been shortened! Here it is:{" "}
               <a href={found.short_url}>{found.short_url}</a>
-              <button
-                type="button"
-                className="btn btn-outline-primary btn-sm ms-2"
-                onClick={(e) => handleCopyClick(e, json.short_url)}
-              >
-                <i className="bi bi-clipboard-check"></i>
-              </button>
+              <CopyButton url={json} size_class="btn-sm ms-2" />
             </div>
           );
           setMessage(failureMessage);
@@ -109,7 +92,7 @@ const UrlShortener = ({ urls, updateURLs }) => {
           placeholder="Enter a URL to shorten here!"
         />
         {message && (
-          <div id="passwordHelpBlock" className="form-text mb-3">
+          <div id="messageHelp" className="form-text mb-3">
             {message}
           </div>
         )}
@@ -121,17 +104,7 @@ const UrlShortener = ({ urls, updateURLs }) => {
   );
 };
 
-const UrlTable = ({ urls }) => {
-  const handleCopyClick = async (e, url) => {
-    try {
-      e.preventDefault();
-      const text = document.getElementById("id-" + url.key).textContent;
-      copyText(text);
-    } catch (err) {
-      console.error("Failed to copy: ", err);
-    }
-  };
-
+const UrlTable = ({ urls, deleteURLs }) => {
   const handleDeleteClick = (url) => {
     showToast("Deleted!");
   };
@@ -145,22 +118,10 @@ const UrlTable = ({ urls }) => {
           </a>
         </td>
         <td>
-          <button
-            type="button"
-            className="btn btn-outline-primary"
-            onClick={(e) => handleCopyClick(e, url)}
-          >
-            <i className="bi bi-clipboard-check"></i>
-          </button>
+          <CopyButton url={url} />
         </td>
         <td>
-          <button
-            type="button"
-            className="btn btn-outline-primary"
-            onClick={() => handleDeleteClick(url)}
-          >
-            <i className="bi bi-trash3"></i>
-          </button>
+          <DeleteButton url={url} deleteURLs={deleteURLs} />
         </td>
       </tr>
     );
@@ -180,9 +141,56 @@ const UrlTable = ({ urls }) => {
   );
 };
 
-const copyText = async (text) => {
-  await navigator.clipboard.writeText(text);
-  showToast("Copied!");
+const CopyButton = ({ url, size_class = "" }) => {
+  const handleCopyClick = async (e, url) => {
+    try {
+      e.stopPropagation();
+      await navigator.clipboard.writeText(url.short_url);
+      showToast("Copied!");
+    } catch (err) {
+      console.error("Failed to copy: ", err);
+    }
+  };
+
+  return (
+    <button
+      type="button"
+      className={`btn btn-outline-primary ${size_class}`}
+      onClick={(e) => handleCopyClick(e, url)}
+    >
+      <i className="bi bi-clipboard-check"></i>
+    </button>
+  );
+};
+
+const DeleteButton = ({ url, deleteURLs }) => {
+  const handleClick = (e) => {
+    e.currentTarget.setAttribute("disabled", "");
+    const options = {
+      method: "DELETE",
+      cache: "no-cache",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    fetch("/us/" + url.key, options)
+      .then((response) => {
+        const data = response.json();
+        return fetch("/us/all");
+      })
+      .then((response) => response.json())
+      .then((data) => deleteURLs(data));
+  };
+  return (
+    <button
+      type="button"
+      className="btn btn-outline-primary"
+      onClick={handleClick}
+    >
+      <i className="bi bi-trash3"></i>
+    </button>
+  );
 };
 
 const showToast = (text) => {
