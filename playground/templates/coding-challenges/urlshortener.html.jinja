@@ -8,6 +8,15 @@
     <div class="p-2 mb-4 bg-body-tertiary rounded-3 col-10">
         <div class="container-fluid py-5">
             <div class="col-md-12">
+            <p>Welcome to my first attempt at a <a href="https://codingchallenges.substack.com/">Coding Challenge</a> from John Crickett. In many ways, this entire website is an ode to Mr. Crickett, who takes the stance that the only way to build your muscles as a developer is to, well, actually build stuff. This "stuff" is a URL shortener (link to the Coding Challenge if you're interested), similar to Bit.ly or Tiny.url.</p>
+            <p>In this challege, my goal was to stretch my React muscles a bit while also learning about Cloud Firestore, a NoSQL database provided by Google. This project represents the first bit of data persistence on the Playground (the <a href="https://playground.jsulz.com/simple-todo">Simple Todo List</a> just uses localstorage).</p>
+            <p>To use the URL shortener, simply add the URL you with to shorten and you'll get a new version of that URL (potenially longer than the original version as I'm using the URL of this site, but here we are). You can immediately copy that URL or come back to this page and find it again by hovering over each shortened URL to see the full URL as a tooltip. If you don't want anyone else to see the URL you saved, you can delete it at any point. Additionally, there's a click to copy button for each URL.</p>
+            <p>Some cool parts about this challenge:</p>
+            <ul>
+            <li>This is my first time using a NoSQL database; <a href="https://cloud.google.com/firestore?hl=en">Firestore</a> made this incredibly easy. Hats off to the Googs.</li>
+            <li>I used <a href="https://en.wikipedia.org/wiki/BLAKE_(hash_function)#BLAKE2b_algorithm">Blake2b</a> to generate the hashes for the URLs. Each hash is 6 characters long and made of numbers 0-9 and lowercase letters in the alphabet for a total of 35 possible characters. That gives me 2,176,782,336 possible combinations before running out of space. I'm not handling collisions right now; it's a straight write through to the Firestore collection; an area of future improvement if I so desire.</li>
+            <li>The REST API supports POSTs, GETs, and DELETEs.</li>
+            </ul>
                 <div id="urls"></div>
                 <div class="toast-container position-fixed bottom-0 end-0 p-5">
                     <div class="toast align-items-center" id="liveToast" role="alert" aria-live="assertive"
