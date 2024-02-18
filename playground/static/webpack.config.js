@@ -6,6 +6,7 @@ const config = {
     gaussIndex: __dirname + "/scripts/gaussIndex.js",
     simpletodoIndex: __dirname + "/scripts/simpletodoIndex.js",
     urlIndex: __dirname + "/scripts/urlIndex.js",
+    netflixIndex: __dirname + "/scripts/netflixIndex.js",
   },
   devtool: "eval-cheap-module-source-map",
   output: {

@@ -11,6 +11,7 @@ from playground.react_playground import (
     first_react_component,
     distribution_series,
     simpletodo,
+    netflix,
 )
 from playground.coding_challenges import url_shortener
 from . import playground
@@ -31,6 +32,7 @@ def create_app(test_config=None):
     app.register_blueprint(distribution_series.ds)
     app.register_blueprint(simpletodo.stodo)
     app.register_blueprint(url_shortener.url)
+    app.register_blueprint(netflix.netflix)
 
     app.register_error_handler(404, page_not_found)
 
