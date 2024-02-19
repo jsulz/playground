@@ -14,7 +14,8 @@
   --netflix-red: #e50914;
   --netflix-white: #f5f5f1;
   --netflix-hover-white: #cccccc;
-  --netflix-black: #221f1f;
+  --netflix-black: #0a0a0a;
+  --netflix-component-black: #221f1f;
   --netflix-muted-red: #b81d24;
 }
 
@@ -105,6 +106,7 @@ footer .bi-linkedin {
 #netflix footer {
   background-color: var(--netflix-black);
   color: var(--netflix-white);
+  font-family: "Martel Sans", sans-serif;
 }
 
 #netflix a,
@@ -123,6 +125,7 @@ footer .bi-linkedin {
 #netflix .logo span {
   transform-origin: 0 0;
   transform: scaleX(80) rotateY(89.5deg);
+  font-family: var(--bs-body-font-family);
 }
 
 #netflix .logo {
@@ -167,4 +170,25 @@ footer .bi-linkedin {
 #netflix .logo span:nth-child(7) {
   transform-origin: 66.6666666667% 200%;
   transform: scale(65.9, 1) rotatey(-89.5deg);
+}
+
+/* React Components */
+#netflix .form-range::-moz-range-thumb {
+  background-color: var(--netflix-muted-red);
+}
+
+#netflix .card {
+  background-color: var(--netflix-component-black);
+}
+
+#netflix .border-danger {
+  border-color: var(--netflix-muted-red) !important;
+}
+
+#netflix .card .text-danger {
+  color: var(--netflix-muted-red) !important;
+}
+
+#netflix .table-dark {
+  --bs-table-bg: var(--netflix-component-black);
 }
