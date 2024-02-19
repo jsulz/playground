@@ -3,6 +3,9 @@ import pandas as pd
 import datetime
 from dateutil import tz
 import calendar
+import warnings
+
+warnings.simplefilter(action="ignore", category=FutureWarning)
 
 netflix = Blueprint(
     "netflix", __name__, template_folder="templates", static_folder="../static"
@@ -45,8 +48,14 @@ def netflix_data():
 
         # Get totals information
         totals = [
-            {"title": "Movies + Episodes Watched", "count": df["Title"].nunique()},
-            {"title": "Hours Watched", "count": df["Duration"].sum()},
+            {
+                "title": "Movies + Episodes Watched",
+                "count": df["Title"].shape[0],
+            },
+            {
+                "title": "Hours Watched",
+                "count": float_format_helper(df["Duration"].sum()),
+            },
         ]
         final["totals"] = totals
 
@@ -60,6 +69,72 @@ def netflix_data():
 
         final["timeSpentBy"] = time_spent_by
 
+        # Compare Movies and TV
+        df_movies = df[df["Title_1"].isnull()]
+        df_tv = df[df["Title_1"].notnull()]
+        movie_tv_count_comp = {
+            "title": "Count of Movies and TV Watched",
+            "data": [
+                {"name": "Movies", "value": df_movies["Title"].shape[0]},
+                {"name": "TV", "value": df_tv["Title"].shape[0]},
+            ],
+        }
+        movie_tv_dur_comp = {
+            "title": "Duration of Movies and TV Watched",
+            "data": [
+                {
+                    "name": "Movies",
+                    "value": float_format_helper(df_movies["Duration"].sum()),
+                },
+                {"name": "Tv", "value": float_format_helper(df_tv["Duration"].sum())},
+            ],
+        }
+        final["comparisonMoviesTv"] = [movie_tv_count_comp, movie_tv_dur_comp]
+
+        # Get device data
+        df_devices = (
+            df.groupby("Device Type")["Device Type"]
+            .value_counts()
+            .sort_values(ascending=False)
+            .to_dict()
+        )
+        device_arr = []
+        for device, count in df_devices.items():
+            device_arr.append({"name": device, "value": count})
+        device_headers = ["Device Name", "Total Views"]
+
+        # Get country data
+        df_countries = (
+            df.groupby("Country")["Country"]
+            .value_counts()
+            .sort_values(ascending=False)
+            .to_dict()
+        )
+        countries_arr = []
+        for countries, count in df_countries.items():
+            countries_arr.append({"name": countries, "value": count})
+        country_headers = ["Country", "Total Views"]
+
+        final["devices"] = {"deviceData": device_arr, "deviceHeaders": device_headers}
+        final["countries"] = {
+            "countriesData": countries_arr,
+            "countriesHeaders": country_headers,
+        }
+
+        topWatches = (
+            df.groupby("Title_0")[["Duration"]]
+            .sum()
+            .sort_values(by="Duration", ascending=False)[:10]
+            .to_dict()["Duration"]
+        )
+        topWatches_arr = []
+        for show_name, duration in topWatches.items():
+            topWatches_arr.append(
+                {"name": show_name, "duration": float_format_helper(duration)}
+            )
+
+        final["topWatches"] = topWatches_arr
+
         return make_response(jsonify(final))
     return make_response(jsonify({"Error": "Not allowed"}), 405)
 
@@ -70,7 +145,13 @@ def time_spent_by_helper(df, period):
     for curr_period, duration in grouping.items():
         if period == "Month":
             curr_period = calendar.month_name[curr_period]
-        period_obj = {"name": curr_period, "hours": duration}
+        if period == "Day":
+            curr_period = calendar.day_name[curr_period - 1]
+        period_obj = {"name": curr_period, "hours": float_format_helper(duration)}
         period_arr.append(period_obj)
 
     return period_arr
+
+
+def float_format_helper(curr_num):
+    return float(f"{curr_num:.2f}")
