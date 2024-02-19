@@ -132,10 +132,11 @@ footer .bi-linkedin {
 #netflix .logo {
   perspective: 1000px;
   perspective-origin: 50% 0;
-  font-size: 2.5em;
+  font-size: 6rem;
   display: inline-flex;
   color: var(--netflix-red);
 }
+
 #netflix .logo span {
   display: block;
 }
@@ -154,19 +155,19 @@ footer .bi-linkedin {
   transform: scale(85.9, 1) rotatey(89.5deg);
 }
 #netflix .logo span:nth-child(4) {
-  transform-origin: 50%50Array/0Array 200%;
+  transform-origin: 50% 200%;
   font-size: 0.85em;
   transform: scale(1, 1) translatey(0%);
 }
 #netflix .logo span:nth-child(5) {
-  transform-origin: 100% 200%;
+  transform-origin: 62% 200%;
   font-size: 0.9em;
   transform: scale(85.9, 1) rotatey(-89.5deg);
 }
 #netflix .logo span:nth-child(6) {
-  transform-origin: 75% 200%;
-  font-size: 0.9em;
-  transform: scale(75.9, 1) rotatey(-89.5deg);
+  transform-origin: 50% 200%;
+  font-size: 0.92em;
+  transform: scale(90, 1) rotatey(-89.5deg) translatex(5%);
 }
 #netflix .logo span:nth-child(7) {
   transform-origin: 66.6666666667% 200%;

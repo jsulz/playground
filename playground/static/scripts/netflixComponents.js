@@ -109,6 +109,7 @@ const YearSelector = ({ year, handleOnChange }) => {
         id="customRange3"
         value={shownYear}
         onMouseUp={handleOnChange}
+        onTouchEndCapture={handleOnChange}
         onChange={handleRangeChange}
       ></input>
     </div>
