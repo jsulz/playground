@@ -192,3 +192,8 @@ footer .bi-linkedin {
 #netflix .table-dark {
   --bs-table-bg: var(--netflix-component-black);
 }
+
+#netflix .dropdown-menu {
+  background-color: var(--netflix-component-black);
+  color: var(--netflix-hover-white);
+}

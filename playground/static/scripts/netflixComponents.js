@@ -44,6 +44,35 @@ const deviceData = [
 
 const deviceHeaders = ["Device Name", "Total Views"];
 
+const countryData = [
+  { name: "United States", value: 5600 },
+  { name: "Nepal", value: 21 },
+  { name: "Nicaragua", value: 50 },
+  { name: "Spain", value: 32 },
+  { name: "Mexico", value: 4 },
+];
+
+const countryHeaders = ["Country", "Total Views"];
+
+const topWatches = [
+  { name: "The Office", episodesWatched: 201, totalDuration: 500 },
+  {
+    name: "Star Trek: DS9",
+    episodesWatched: 154,
+    totalDuration: 175,
+  },
+  { name: "Star Trek: Voyager", episodesWatched: 124, totalDuration: 130 },
+  { name: "Parks and Recreation", episodesWatched: 100, totalDuration: 50 },
+  { name: "Breaking Bad", episodesWatched: 90, totalDuration: 80 },
+];
+
+const topWatchesHeaders = [
+  "Show Title",
+  "Episodes Watched",
+  "Total Hours Watched",
+  "See Deep Dive",
+];
+
 const byYearDeepDive = [
   {
     name: "year",
@@ -69,22 +98,22 @@ const byYearDeepDive = [
 ];
 
 const byYear = [
-  { name: "2009", value: 100 },
-  { name: "2010", value: 253 },
-  { name: "2011", value: 345 },
-  { name: "2012", value: 321 },
-  { name: "2013", value: 1000 },
-  { name: "2014", value: 324 },
-  { name: "2015", value: 124 },
-  { name: "2016", value: 325 },
-  { name: "2017", value: 500 },
-  { name: "2018", value: 325 },
-  { name: "2019", value: 245 },
-  { name: "2020", value: 600 },
-  { name: "2021", value: 100 },
-  { name: "2022", value: 343 },
-  { name: "2023", value: 200 },
-  { name: "2024", value: 100 },
+  { name: "2009", hours: 100 },
+  { name: "2010", hours: 253 },
+  { name: "2011", hours: 345 },
+  { name: "2012", hours: 321 },
+  { name: "2013", hours: 1000 },
+  { name: "2014", hours: 324 },
+  { name: "2015", hours: 124 },
+  { name: "2016", hours: 325 },
+  { name: "2017", hours: 500 },
+  { name: "2018", hours: 325 },
+  { name: "2019", hours: 245 },
+  { name: "2020", hours: 600 },
+  { name: "2021", hours: 100 },
+  { name: "2022", hours: 343 },
+  { name: "2023", hours: 200 },
+  { name: "2024", hours: 100 },
 ];
 
 export default function Netflix() {
@@ -93,10 +122,37 @@ export default function Netflix() {
       <YearSelector />
       <Totals />
       <TimeSpentBy timeSpentData={byYear} />
-      <div className="container">
-        <div className="row row-cols-sm-1 row-cols-lg-3">
+      <div className="text-center container mb-5 ">
+        <h2>Watching Activity by Movies / Television</h2>
+        <div className="row row-cols-sm-1 row-cols-md-2">
           <PaddedPieChart pieDatum={comparisonMoviesTv} />
-          <Table tableData={deviceData} tableHeaders={deviceHeaders} />
+        </div>
+        <div className="container text-center mb-5 ">
+          <h2 className="text-center">
+            Watching Activity by Device & Location
+          </h2>
+          <div className="row row-cols-sm-1 row-cols-md-2">
+            <Table
+              tableData={deviceData}
+              tableHeaders={deviceHeaders}
+              deepDive={false}
+            />
+            <Table
+              tableData={countryData}
+              tableHeaders={countryHeaders}
+              deepDive={false}
+            />
+          </div>
+        </div>
+        <div className="container text-center mb-5 ">
+          <h2 className="text-center">Top Watches on Netflix</h2>
+          <div className="row">
+            <Table
+              tableData={topWatches}
+              tableHeaders={topWatchesHeaders}
+              deepDive={true}
+            />
+          </div>
         </div>
       </div>
     </>
@@ -132,7 +188,7 @@ const Totals = () => {
   ];
   const cards = totals.map((total) => {
     return (
-      <div class="col card border-danger mb-3 mx-2">
+      <div class="col card border-danger mx-2">
         <div class="card-body text-danger">
           <h5 class="card-title">{total.title}</h5>
           <p class="card-text">{total.count}</p>
@@ -143,7 +199,7 @@ const Totals = () => {
 
   return (
     <div className="container">
-      <div className="row">{cards}</div>
+      <div className="row mb-5">{cards}</div>
     </div>
   );
 };
@@ -183,15 +239,25 @@ const PaddedPieChart = ({ pieDatum }) => {
   return charts;
 };
 
-const Table = ({ tableData, tableHeaders }) => {
+const Table = ({ tableData, tableHeaders, deepDive }) => {
   const tHead = tableHeaders.map((head) => {
     return <th scope="col">{head}</th>;
   });
   const tData = tableData.map((data) => {
+    const tds = [];
+    for (const property in data) {
+      tds.push(<td>{data[property]}</td>);
+    }
     return (
       <tr>
-        <td>{data.name}</td>
-        <td>{data.value}</td>
+        {tds.map((td) => {
+          return td;
+        })}
+        {deepDive && (
+          <td>
+            <DeepDiveBtn name={data.name} />
+          </td>
+        )}
       </tr>
     );
   });
@@ -207,18 +273,58 @@ const Table = ({ tableData, tableHeaders }) => {
   );
 };
 
+const DeepDiveBtn = ({ name }) => {
+  return (
+    <button type="button" class="btn btn-danger">
+      <i class="bi bi-graph-up-arrow"></i>
+    </button>
+  );
+};
+
 const TimeSpentBy = ({ timeSpentData }) => {
   return (
-    <ResponsiveContainer width="100%" height={300}>
-      <BarChart data={timeSpentData}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <Bar dataKey="value" fill="#b81d24" />
-      </BarChart>
-    </ResponsiveContainer>
+    <div className="text-center container mb-3">
+      <h2>
+        Time Spent by <TimeSpentSelector />
+      </h2>
+      <ResponsiveContainer width="100%" height={300}>
+        <BarChart data={timeSpentData}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="hours" fill="#b81d24" />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+  );
+};
+
+const TimeSpentSelector = () => {
+  return (
+    <div class="btn-group">
+      <button
+        type="button"
+        class="btn btn-danger dropdown-toggle"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+      >
+        Year
+      </button>
+      <ul class="dropdown-menu">
+        <li>
+          <a class="dropdown-item" href="#">
+            Month
+          </a>
+        </li>
+        <li>
+          <a class="dropdown-item" href="#">
+            Day
+          </a>
+        </li>
+      </ul>
+    </div>
   );
 };
 
