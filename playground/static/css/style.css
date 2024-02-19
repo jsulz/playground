@@ -17,6 +17,7 @@
   --netflix-black: #0a0a0a;
   --netflix-component-black: #221f1f;
   --netflix-muted-red: #b81d24;
+  --netflix-muted-red-rgba: #b81d2586;
 }
 
 /* Global */
@@ -196,4 +197,8 @@ footer .bi-linkedin {
 #netflix .dropdown-menu {
   background-color: var(--netflix-component-black);
   color: var(--netflix-hover-white);
+}
+
+#netflix ::selection {
+  background: var(--netflix-muted-red-rgba);
 }

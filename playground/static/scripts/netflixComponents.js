@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Pie,
   PieChart,
@@ -18,22 +18,71 @@ import {
 const startYear = 2009;
 const endYear = 2024;
 
-const comparisonMoviesTv = [
-  {
-    title: "Count of Movies and TV Watched",
-    data: [
-      { name: "Movies", value: 560 },
-      { name: "TV", value: 3580 },
+const APIDATA = {
+  totals: [
+    { title: "Movies + TV Episodes Watched", count: 4588 },
+    { title: "Hours Watched", count: 1000 },
+  ],
+  timeSpentBy: {
+    byYear: [
+      { name: "2009", hours: 100 },
+      { name: "2010", hours: 253 },
+      { name: "2011", hours: 345 },
+      { name: "2012", hours: 321 },
+      { name: "2013", hours: 1000 },
+      { name: "2014", hours: 324 },
+      { name: "2015", hours: 124 },
+      { name: "2016", hours: 325 },
+      { name: "2017", hours: 500 },
+      { name: "2018", hours: 325 },
+      { name: "2019", hours: 245 },
+      { name: "2020", hours: 600 },
+      { name: "2021", hours: 100 },
+      { name: "2022", hours: 343 },
+      { name: "2023", hours: 200 },
+      { name: "2024", hours: 100 },
+    ],
+    byMonth: [
+      { name: "January", hours: 502 },
+      { name: "February", hours: 720 },
+      { name: "March", hours: 400 },
+      { name: "April", hours: 349 },
+      { name: "May", hours: 271 },
+      { name: "June", hours: 102 },
+      { name: "July", hours: 105 },
+      { name: "August", hours: 80 },
+      { name: "September", hours: 150 },
+      { name: "October", hours: 245 },
+      { name: "November", hours: 450 },
+      { name: "December", hours: 500 },
+    ],
+    byDay: [
+      { name: "Sunday", hours: 1800 },
+      { name: "Monday", hours: 345 },
+      { name: "Tuesday", hours: 500 },
+      { name: "Wednesday", hours: 400 },
+      { name: "Thursday", hours: 700 },
+      { name: "Friday", hours: 890 },
+      { name: "Saturday", hours: 1800 },
     ],
   },
-  {
-    title: "Duration of Movies and TV Watched",
-    data: [
-      { name: "Movies", value: 1000 },
-      { name: "TV", value: 3580 },
-    ],
-  },
-];
+  comparisonMoviesTv: [
+    {
+      title: "Count of Movies and TV Watched",
+      data: [
+        { name: "Movies", value: 560 },
+        { name: "TV", value: 3580 },
+      ],
+    },
+    {
+      title: "Duration of Movies and TV Watched",
+      data: [
+        { name: "Movies", value: 1000 },
+        { name: "TV", value: 3580 },
+      ],
+    },
+  ],
+};
 
 const deviceData = [
   { name: "Samsung TV", value: 3232 },
@@ -55,109 +104,52 @@ const countryData = [
 const countryHeaders = ["Country", "Total Views"];
 
 const topWatches = [
-  { name: "The Office", episodesWatched: 201, totalDuration: 500 },
-  {
-    name: "Star Trek: DS9",
-    episodesWatched: 154,
-    totalDuration: 175,
-  },
-  { name: "Star Trek: Voyager", episodesWatched: 124, totalDuration: 130 },
-  { name: "Parks and Recreation", episodesWatched: 100, totalDuration: 50 },
-  { name: "Breaking Bad", episodesWatched: 90, totalDuration: 80 },
-];
-
-const topWatchesHeaders = [
-  "Show Title",
-  "Episodes Watched",
-  "Total Hours Watched",
-  "See Deep Dive",
-];
-
-const byYearDeepDive = [
-  {
-    name: "year",
-    children: [
-      { name: "2009", size: 100 },
-      { name: "2010", size: 253 },
-      { name: "2011", size: 345 },
-      { name: "2012", size: 321 },
-      { name: "2013", size: 1000 },
-      { name: "2014", size: 324 },
-      { name: "2015", size: 124 },
-      { name: "2016", size: 325 },
-      { name: "2017", size: 500 },
-      { name: "2018", size: 325 },
-      { name: "2019", size: 245 },
-      { name: "2020", size: 600 },
-      { name: "2021", size: 100 },
-      { name: "2022", size: 343 },
-      { name: "2023", size: 200 },
-      { name: "2024", size: 100 },
-    ],
-  },
-];
-
-const byYear = [
-  { name: "2009", hours: 100 },
-  { name: "2010", hours: 253 },
-  { name: "2011", hours: 345 },
-  { name: "2012", hours: 321 },
-  { name: "2013", hours: 1000 },
-  { name: "2014", hours: 324 },
-  { name: "2015", hours: 124 },
-  { name: "2016", hours: 325 },
-  { name: "2017", hours: 500 },
-  { name: "2018", hours: 325 },
-  { name: "2019", hours: 245 },
-  { name: "2020", hours: 600 },
-  { name: "2021", hours: 100 },
-  { name: "2022", hours: 343 },
-  { name: "2023", hours: 200 },
-  { name: "2024", hours: 100 },
+  { name: "The Office", duration: 500 },
+  { name: "Star Trek: DS9", duration: 175 },
+  { name: "Star Trek: Voyager", duration: 130 },
+  { name: "Parks and Recreation", duration: 50 },
+  { name: "Breaking Bad", duration: 80 },
 ];
 
 export default function Netflix() {
   return (
     <>
       <YearSelector />
-      <Totals />
-      <TimeSpentBy timeSpentData={byYear} />
-      <div className="text-center container mb-5 ">
-        <h2>Watching Activity by Movies / Television</h2>
-        <div className="row row-cols-sm-1 row-cols-md-2">
-          <PaddedPieChart pieDatum={comparisonMoviesTv} />
-        </div>
-        <div className="container text-center mb-5 ">
-          <h2 className="text-center">
-            Watching Activity by Device & Location
-          </h2>
-          <div className="row row-cols-sm-1 row-cols-md-2">
-            <Table
-              tableData={deviceData}
-              tableHeaders={deviceHeaders}
-              deepDive={false}
-            />
-            <Table
-              tableData={countryData}
-              tableHeaders={countryHeaders}
-              deepDive={false}
-            />
-          </div>
-        </div>
-        <div className="container text-center mb-5 ">
-          <h2 className="text-center">Top Watches on Netflix</h2>
-          <div className="row">
-            <Table
-              tableData={topWatches}
-              tableHeaders={topWatchesHeaders}
-              deepDive={true}
-            />
-          </div>
-        </div>
-      </div>
+      <Totals totalData={APIDATA.totals} />
+      <TimeSpentBy timeSpentData={APIDATA.timeSpentBy} />
+      <DataRow
+        headingText="Watching Activity by Movies / Television"
+        columns={2}
+      >
+        <PaddedPieChart pieDatum={APIDATA.comparisonMoviesTv} />
+      </DataRow>
+      <DataRow headingText="Top Watches on Netflix" columns={1}>
+        <TopWatches topWatchData={topWatches} />
+      </DataRow>
+      <DataRow headingText="Watching Activity by Device & Location" columns={2}>
+        <Table
+          tableData={deviceData}
+          tableHeaders={deviceHeaders}
+          deepDive={false}
+        />
+        <Table
+          tableData={countryData}
+          tableHeaders={countryHeaders}
+          deepDive={false}
+        />
+      </DataRow>
     </>
   );
 }
+
+const DataRow = ({ headingText, columns, children }) => {
+  return (
+    <div className="text-center container mb-5 ">
+      <h2>{headingText}</h2>
+      <div className={`row row-cols-1 row-cols-md-${columns}`}>{children}</div>
+    </div>
+  );
+};
 
 // @Todo: Update range handler
 const YearSelector = () => {
@@ -181,25 +173,23 @@ const YearSelector = () => {
   );
 };
 
-const Totals = () => {
-  const totals = [
-    { title: "Movies + TV Episodes Watched", count: 4588 },
-    { title: "Hours Watched", count: 1000 },
-  ];
-  const cards = totals.map((total) => {
+const Totals = ({ totalData }) => {
+  const cards = totalData.map((total) => {
     return (
-      <div class="col card border-danger mx-2">
-        <div class="card-body text-danger">
-          <h5 class="card-title">{total.title}</h5>
-          <p class="card-text">{total.count}</p>
+      <div class="col">
+        <div className="card card border-danger">
+          <div class="card-body text-danger">
+            <h5 class="card-title">{total.title}</h5>
+            <p class="card-text">{total.count}</p>
+          </div>
         </div>
       </div>
     );
   });
 
   return (
-    <div className="container">
-      <div className="row mb-5">{cards}</div>
+    <div className="container text-center">
+      <div className="row row-cols-md-2 row-cols-1 mb-5 g-2">{cards}</div>
     </div>
   );
 };
@@ -210,7 +200,6 @@ const PaddedPieChart = ({ pieDatum }) => {
     return (
       <div className="col">
         <h6>{pieData.title}</h6>
-        {console.log(pieData.data)}
         <ResponsiveContainer width="100%" height={200}>
           <PieChart>
             <Pie
@@ -221,7 +210,6 @@ const PaddedPieChart = ({ pieDatum }) => {
               paddingAngle={5}
             >
               {pieData.data.map((item, index) => {
-                console.log(COLORS[index % COLORS.length]);
                 return (
                   <Cell
                     key={`cell-${index}`}
@@ -273,23 +261,20 @@ const Table = ({ tableData, tableHeaders, deepDive }) => {
   );
 };
 
-const DeepDiveBtn = ({ name }) => {
-  return (
-    <button type="button" class="btn btn-danger">
-      <i class="bi bi-graph-up-arrow"></i>
-    </button>
-  );
-};
-
 const TimeSpentBy = ({ timeSpentData }) => {
+  const [timePeriod, setTimePeriod] = useState("byYear");
+  const handleOnClick = (e) => {
+    e.preventDefault();
+    setTimePeriod("by" + e.target.innerText);
+  };
   return (
     <div className="text-center container mb-3">
       <h2>
-        Time Spent by <TimeSpentSelector />
+        Time Spent by{" "}
+        <TimeSpentSelector time={timePeriod} handleOnClick={handleOnClick} />
       </h2>
       <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={timeSpentData}>
-          <CartesianGrid strokeDasharray="3 3" />
+        <BarChart data={timeSpentData[timePeriod]}>
           <XAxis dataKey="name" />
           <YAxis />
           <Tooltip />
@@ -301,7 +286,17 @@ const TimeSpentBy = ({ timeSpentData }) => {
   );
 };
 
-const TimeSpentSelector = () => {
+const TimeSpentSelector = ({ time, handleOnClick }) => {
+  const periods = ["Month", "Day"];
+  const dropdown = periods.map((period) => {
+    return (
+      <li onClick={handleOnClick}>
+        <a class="dropdown-item" href="#">
+          {period}
+        </a>
+      </li>
+    );
+  });
   return (
     <div class="btn-group">
       <button
@@ -310,38 +305,23 @@ const TimeSpentSelector = () => {
         data-bs-toggle="dropdown"
         aria-expanded="false"
       >
-        Year
+        {time.slice(2)}
       </button>
-      <ul class="dropdown-menu">
-        <li>
-          <a class="dropdown-item" href="#">
-            Month
-          </a>
-        </li>
-        <li>
-          <a class="dropdown-item" href="#">
-            Day
-          </a>
-        </li>
-      </ul>
+      <ul class="dropdown-menu">{dropdown}</ul>
     </div>
   );
 };
 
-const DeepDiveTimeSpentBy = () => {
+const TopWatches = ({ topWatchData }) => {
   return (
-    <ResponsiveContainer width="100%" height={200}>
-      <Treemap
-        width={400}
-        height={200}
-        data={byYear}
-        dataKey="size"
-        aspectRatio={4 / 3}
-        stroke="#fff"
-        fill="#b81d24"
-      >
+    <ResponsiveContainer width="100%" height={400}>
+      <BarChart data={topWatchData} layout="vertical" margin={{ left: 30 }}>
+        <XAxis dataKey="duration" type="number" />
+        <YAxis dataKey="name" type="category" />
         <Tooltip />
-      </Treemap>
+        <Legend />
+        <Bar dataKey="duration" fill="#b81d24" />
+      </BarChart>
     </ResponsiveContainer>
   );
 };
