@@ -82,34 +82,29 @@ const APIDATA = {
       ],
     },
   ],
+  deviceData: [
+    { name: "Samsung TV", value: 3232 },
+    { name: "PC", value: 2322 },
+    { name: "iPad", value: 52 },
+    { name: "Macbook Pro", value: 583 },
+  ],
+  deviceHeaders: ["Device Name", "Total Views"],
+  countryData: [
+    { name: "United States", value: 5600 },
+    { name: "Nepal", value: 21 },
+    { name: "Nicaragua", value: 50 },
+    { name: "Spain", value: 32 },
+    { name: "Mexico", value: 4 },
+  ],
+  countryHeaders: ["Country", "Total Views"],
+  topWatches: [
+    { name: "The Office", duration: 500 },
+    { name: "Star Trek: DS9", duration: 175 },
+    { name: "Star Trek: Voyager", duration: 130 },
+    { name: "Parks and Recreation", duration: 50 },
+    { name: "Breaking Bad", duration: 80 },
+  ],
 };
-
-const deviceData = [
-  { name: "Samsung TV", value: 3232 },
-  { name: "PC", value: 2322 },
-  { name: "iPad", value: 52 },
-  { name: "Macbook Pro", value: 583 },
-];
-
-const deviceHeaders = ["Device Name", "Total Views"];
-
-const countryData = [
-  { name: "United States", value: 5600 },
-  { name: "Nepal", value: 21 },
-  { name: "Nicaragua", value: 50 },
-  { name: "Spain", value: 32 },
-  { name: "Mexico", value: 4 },
-];
-
-const countryHeaders = ["Country", "Total Views"];
-
-const topWatches = [
-  { name: "The Office", duration: 500 },
-  { name: "Star Trek: DS9", duration: 175 },
-  { name: "Star Trek: Voyager", duration: 130 },
-  { name: "Parks and Recreation", duration: 50 },
-  { name: "Breaking Bad", duration: 80 },
-];
 
 export default function Netflix() {
   return (
@@ -124,17 +119,17 @@ export default function Netflix() {
         <PaddedPieChart pieDatum={APIDATA.comparisonMoviesTv} />
       </DataRow>
       <DataRow headingText="Top Watches on Netflix" columns={1}>
-        <TopWatches topWatchData={topWatches} />
+        <TopWatches topWatchData={APIDATA.topWatches} />
       </DataRow>
       <DataRow headingText="Watching Activity by Device & Location" columns={2}>
         <Table
-          tableData={deviceData}
-          tableHeaders={deviceHeaders}
+          tableData={APIDATA.deviceData}
+          tableHeaders={APIDATA.deviceHeaders}
           deepDive={false}
         />
         <Table
-          tableData={countryData}
-          tableHeaders={countryHeaders}
+          tableData={APIDATA.countryData}
+          tableHeaders={APIDATA.countryHeaders}
           deepDive={false}
         />
       </DataRow>
