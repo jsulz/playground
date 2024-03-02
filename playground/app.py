@@ -1,3 +1,4 @@
+import os
 from flask import Flask, render_template
 from playground.bbospp import (
     birthday_paradox,
@@ -20,6 +21,8 @@ from . import playground
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
+
+    app.secret_key = os.environ["SESSION_SECRET"]
 
     app.register_blueprint(playground.play)
     app.register_blueprint(birthday_paradox.bp)
