@@ -49,7 +49,7 @@ def netflix_data():
         # Get totals information
         totals = [
             {
-                "title": "Movies + Episodes Watched",
+                "title": "Movies + TV Episodes Watched",
                 "count": df["Title"].shape[0],
             },
             {

@@ -7,6 +7,7 @@ const config = {
     simpletodoIndex: __dirname + "/scripts/simpletodoIndex.js",
     urlIndex: __dirname + "/scripts/urlIndex.js",
     netflixIndex: __dirname + "/scripts/netflixIndex.js",
+    spotifyIndex: __dirname + "/scripts/spotifyIndex.js",
   },
   devtool: "eval-cheap-module-source-map",
   output: {

@@ -13,7 +13,7 @@ from playground.react_playground import (
     simpletodo,
     netflix,
 )
-from playground.coding_challenges import url_shortener
+from playground.coding_challenges import url_shortener, spotify
 from . import playground
 
 
@@ -33,6 +33,7 @@ def create_app(test_config=None):
     app.register_blueprint(simpletodo.stodo)
     app.register_blueprint(url_shortener.url)
     app.register_blueprint(netflix.netflix)
+    app.register_blueprint(spotify.spotify)
 
     app.register_error_handler(404, page_not_found)
 
