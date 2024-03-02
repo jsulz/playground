@@ -4,7 +4,15 @@ import base64
 import random
 import os
 import time
-from flask import Blueprint, request, session, redirect, jsonify, render_template
+from flask import (
+    Blueprint,
+    request,
+    session,
+    redirect,
+    jsonify,
+    render_template,
+    make_response,
+)
 
 spotify = Blueprint("spotify", __name__, template_folder="templates")
 
@@ -20,8 +28,41 @@ def spotify_tastes():
         }
         return render_template("coding-challenges/spotify.html.jinja", results=results)
     # If they do, then build up the page
+    # get profile information
+    # get user's top tracks
+    # get users's top artists
+
+    return render_template("coding-challenges/spotify.html.jinja", results={})
     # return redirect("/spotify-login")
     # return render_template("coding-challenges/spotify.html.jinja")
+
+
+@spotify.route("/spotify-user-info", methods=["GET"])
+def get_user_info():
+    # https://developer.spotify.com/documentation/web-api/reference/get-current-users-profile
+    pass
+
+
+@spotify.route("/spotify-user-history", methods=["GET"])
+def get_user_top():
+    pass
+
+
+@spotify.route("/spotify-recommendations", methods=["GET"])
+def get_user_recommendations():
+    pass
+
+
+@spotify.route("/spotify-clear-session", methods=["POST"])
+def clear_session():
+    # @TODO Handle a bunch of stuff related to guard conditions
+    # pop all the session variables we set
+    session.pop("access_token", None)
+    session.pop("refresh_token", None)
+    session.pop("token_expiry_time", None)
+
+    # return a successful response; the front end will reload the page
+    return make_response(jsonify({"success": "variables cleared"}), 200)
 
 
 @spotify.route("/spotify-auth", methods=["GET"])
@@ -40,9 +81,10 @@ def auth():
 
     r = requests.post(token_url, params=params_dict, headers=headers_dict, timeout=10)
     r_json = r.json()
+    print(r_json)
     session["access_token"] = r_json["access_token"]
     session["refresh_token"] = r_json["refresh_token"]
-    session["token_expiry_time"] = int(time.time()) + r.json["expires_in"]
+    session["token_expiry_time"] = int(time.time()) + r_json["expires_in"]
     results = {"no_token": False}
 
     return render_template("coding-challenges/spotify.html.jinja", results=results)
@@ -59,7 +101,7 @@ def login():
         "client_id": os.environ["CLIENT_ID"],
         "response_type": "code",
         "redirect_uri": "http://127.0.0.1:5000/spotify-auth",
-        "scope": "user-top-read",
+        "scope": "user-top-read,user-read-private,user-read-email",
         "code_challenge_method": "S256",
         "code_challenge": challenge_code,
     }
