@@ -19,6 +19,7 @@ def auth():
     code = request.args["code"]
     token_url = "https://accounts.spotify.com/api/token"
     print(session["code_verifier"])
+    print(base64.urlsafe_b64encode(session["code_verifier"].encode("ascii")))
     params_dict = {
         "grant_type": "authorization_code",
         "code": code,
@@ -28,7 +29,7 @@ def auth():
     }
     headers_dict = {"Content-Type": "application/x-www-form-urlencoded"}
     r = requests.post(token_url, params=params_dict, headers=headers_dict)
-    print(r.text)
+    print(r.content)
 
 
 @spotify.route("/spotify-login", methods=["GET"])
@@ -39,6 +40,7 @@ def login():
     print(session["code_verifier"])
     code_hashed = hash_code(code_verifier)
     challenge_code = code_challenge(code_hashed)
+    print(challenge_code)
     param_dict = {
         "client_id": os.environ["CLIENT_ID"],
         "response_type": "code",
@@ -62,9 +64,9 @@ def code_generator(length):
 def hash_code(code):
     # https://docs.python.org/3/library/hashlib.html#usage
     encoded_code = code.encode(encoding="UTF-8")
-    return hashlib.sha256(encoded_code).hexdigest()
+    return hashlib.sha256(encoded_code).digest()
 
 
 def code_challenge(hashed_code):
-    encoded_hash = hashed_code.encode("ascii")
-    return base64.b64encode(encoded_hash)
+    challenge = base64.urlsafe_b64encode(hashed_code).decode("utf-8")
+    return challenge.replace("=", "")
