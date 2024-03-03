@@ -45,100 +45,76 @@ const userTopArtists = [
   },
 ];
 
-const userTopTracks = [
-  {
-    album: {
-      name: "Popular Mechanics",
-      image: "https://i.scdn.co/image/ab67616d00004851286b23887eb73c8f02f3731e",
-      release_date: "2017",
-    },
-    artists: ["Son Lux", "Lily & Madeleine"],
-    name: "Capable",
-    popularity: "24",
-    duration: 1248203,
-    preview_url:
-      "https://p.scdn.co/mp3-preview/160bf70ca16d9c06c9ddb320d75489a1ed26f281?cid=7f994fdc60e04c7e9a21d4fef64edadf",
-  },
-  {
-    album: {
-      name: "Popular Mechanics",
-      image: "https://i.scdn.co/image/ab67616d00004851286b23887eb73c8f02f3731e",
-      release_date: "2017",
-    },
-    artists: ["Son Lux", "Lily & Madeleine"],
-    name: "Capable",
-    popularity: "24",
-    duration: 1248203,
-    preview_url:
-      "https://p.scdn.co/mp3-preview/160bf70ca16d9c06c9ddb320d75489a1ed26f281?cid=7f994fdc60e04c7e9a21d4fef64edadf",
-  },
-  {
-    album: {
-      name: "Popular Mechanics",
-      image: "https://i.scdn.co/image/ab67616d00004851286b23887eb73c8f02f3731e",
-      release_date: "2017",
-    },
-    artists: ["Son Lux", "Lily & Madeleine"],
-    name: "Capable",
-    popularity: "24",
-    duration: 1248203,
-    preview_url:
-      "https://p.scdn.co/mp3-preview/160bf70ca16d9c06c9ddb320d75489a1ed26f281?cid=7f994fdc60e04c7e9a21d4fef64edadf",
-  },
-  {
-    album: {
-      name: "Popular Mechanics",
-      image: "https://i.scdn.co/image/ab67616d00004851286b23887eb73c8f02f3731e",
-      release_date: "2017",
-    },
-    artists: ["Son Lux", "Lily & Madeleine"],
-    name: "Capable",
-    popularity: "24",
-    duration: 1248203,
-    preview_url:
-      "https://p.scdn.co/mp3-preview/160bf70ca16d9c06c9ddb320d75489a1ed26f281?cid=7f994fdc60e04c7e9a21d4fef64edadf",
-  },
-  {
-    album: {
-      name: "Popular Mechanics",
-      image: "https://i.scdn.co/image/ab67616d00004851286b23887eb73c8f02f3731e",
-      release_date: "2017",
-    },
-    artists: ["Son Lux", "Lily & Madeleine"],
-    name: "Capable",
-    popularity: "24",
-    duration: 1248203,
-    preview_url:
-      "https://p.scdn.co/mp3-preview/160bf70ca16d9c06c9ddb320d75489a1ed26f281?cid=7f994fdc60e04c7e9a21d4fef64edadf",
-  },
-  {
-    album: {
-      name: "Popular Mechanics",
-      image: "https://i.scdn.co/image/ab67616d00004851286b23887eb73c8f02f3731e",
-      release_date: "2017",
-    },
-    artists: ["Son Lux", "Lily & Madeleine"],
-    name: "Capable",
-    popularity: "24",
-    duration: 1248203,
-    preview_url:
-      "https://p.scdn.co/mp3-preview/160bf70ca16d9c06c9ddb320d75489a1ed26f281?cid=7f994fdc60e04c7e9a21d4fef64edadf",
-  },
-];
-
 export default function Spotify() {
-  useEffect(() => {}, []);
+  const [currentlyPlaying, setCurrentlyPlaying] = useState(null);
+  const [userProfile, setUserProfile] = useState(null);
+  const [topSongs, setTopSongs] = useState(null);
+  const [topArtists, setTopArtists] = useState(null);
+  const [trackTimeRange, setTrackTerm] = useState("short_term");
+  const [artistTimeRange, setArtistTerm] = useState("short_term");
+
+  useEffect(() => {
+    fetch("/spotify-user-info")
+      .then((response) => response.json())
+      .then((data) => {
+        setUserProfile(data.data);
+      });
+  }, []);
+
+  useEffect(() => {
+    const paramString = "type=tracks&time_range=" + trackTimeRange;
+    const params = new URLSearchParams(paramString);
+    let active = true;
+    fetch("/spotify-user-history?" + params)
+      .then((response) => response.json())
+      .then((data) => {
+        if (active) {
+          setTopSongs(data.data);
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [trackTimeRange]);
+
+  useEffect(() => {
+    const paramString = "type=tracks&time_range=" + trackTimeRange;
+    const params = new URLSearchParams(paramString);
+    let active = true;
+    fetch("/spotify-user-history?" + params)
+      .then((response) => response.json())
+      .then((data) => {
+        if (active) {
+          setTopSongs(data.data);
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [trackTimeRange]);
+
+  const handlePlayTrack = (e, track) => {
+    e.preventDefault();
+    setCurrentlyPlaying(track);
+  };
 
   return (
     <>
       <div>
-        <a href="spotify:album:1q3IaeGzKz13rgMoxXBDEZ" target="_blank">
-          test
-        </a>
-        <UserProfile userProfileInfo={userProfileInfo} />
-        <TopSongs userTopTracks={userTopTracks} />
-        <TopArtists userTopArtists={userTopArtists} />
-        <ClearSession />
+        <div className="row row-cols-2">
+          <div className="col">
+            {userProfile && <UserProfile userProfileInfo={userProfileInfo} />}
+          </div>
+          <div className="col">
+            <Player currentlyPlaying={currentlyPlaying} />
+          </div>
+        </div>
+        {topSongs && (
+          <TopSongs playTrack={handlePlayTrack} userTopTracks={topSongs} />
+        )}
+        {topArtists && <TopArtists userTopArtists={userTopArtists} />}
       </div>
     </>
   );
@@ -169,6 +145,8 @@ const UserProfile = ({ userProfileInfo }) => {
                 <small class="text-body-secondary">
                   Followers: {userProfileInfo.followers}
                 </small>
+                <br />
+                <ClearSession />
               </p>
             </div>
           </div>
@@ -178,7 +156,34 @@ const UserProfile = ({ userProfileInfo }) => {
   );
 };
 
-const TopSongs = ({ userTopTracks }) => {
+const Player = ({ currentlyPlaying }) => {
+  return (
+    <>
+      {currentlyPlaying ? (
+        <>
+          <audio
+            controls
+            controlslist="play timeline"
+            src={currentlyPlaying.preview_url}
+          ></audio>
+          <div>
+            <ul>
+              <li>Currently Playing: {currentlyPlaying.name}</li>
+              <li>
+                On: {currentlyPlaying.image} {currentlyPlaying.album.name}
+              </li>
+              <li>By: {currentlyPlaying.artists.join(", ")}</li>
+            </ul>
+          </div>
+        </>
+      ) : (
+        <h1>Hello</h1>
+      )}
+    </>
+  );
+};
+
+const TopSongs = ({ userTopTracks, playTrack }) => {
   const trs = userTopTracks.map((track) => {
     return (
       <tr key={track.preview_url}>
@@ -186,27 +191,29 @@ const TopSongs = ({ userTopTracks }) => {
           <img src={track.album.image} />
         </td>
         <td>
-          {track.name} <br />{" "}
-          <small>
-            Artists: {track.artists.map((artist) => artist).join(", ")}
-          </small>
+          {track.name} <br /> <small>Artists: {track.artists.join(", ")}</small>
         </td>
         <td>{track.album.name}</td>
         <td>{track.album.release_date}</td>
         <td>{track.duration}</td>
         <td>
-          <audio
-            controls
-            controlslist="play timeline"
-            src={track.preview_url}
-          ></audio>
+          <button
+            onClick={(e) => playTrack(e, track)}
+            type="button"
+            class="btn btn-secondary"
+          >
+            <i class="bi bi-play-circle"></i>
+          </button>
         </td>
       </tr>
     );
   });
   return (
     <>
-      <table>
+      <h2>
+        Top Listened to Tracks in the <TimeSpentSelector time={"short-term"} />
+      </h2>
+      <table className="table table-dark table-responsive-md">
         <thead>
           <tr>
             <th></th>
@@ -223,22 +230,12 @@ const TopSongs = ({ userTopTracks }) => {
   );
 };
 
-/**
-  {
-    name: "The Districts",
-    popularity: 37,
-    followers: 100750,
-    genres: ["lancaster pa indie", "grungecore", "popmastic"],
-    image: "https://i.scdn.co/image/ab6761610000f1789f4013bf7a84aac2e867961d",
-  },
- */
-
 const TopArtists = ({ userTopArtists }) => {
   const trs = userTopArtists.map((artist) => {
     return (
       <tr key={artist.name}>
         <td>
-          <img src={artist.image} />
+          <img height={64} width={64} src={artist.image} />
         </td>
         <td>{artist.name}</td>
         <td>{artist.genres.map((genre) => genre).join(", ")}</td>
@@ -249,7 +246,10 @@ const TopArtists = ({ userTopArtists }) => {
   });
   return (
     <>
-      <table>
+      <h2>
+        Top Listened to Artists in the <TimeSpentSelector time={"short-term"} />
+      </h2>
+      <table className="table table-dark table-responsive-md">
         <thead>
           <tr>
             <th>#</th>
@@ -265,8 +265,32 @@ const TopArtists = ({ userTopArtists }) => {
   );
 };
 
-const TimeRange = () => {
-  // button group
+const TimeSpentSelector = ({ time }) => {
+  const periods = ["long-term", "medium-term", "short-term"];
+  const dropdown = periods.map((period) => {
+    if (time != period) {
+      return (
+        <li>
+          <a class="dropdown-item" href="#">
+            {period}
+          </a>
+        </li>
+      );
+    }
+  });
+  return (
+    <div class="btn-group">
+      <button
+        type="button"
+        class="btn dropdown-toggle"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+      >
+        {time}
+      </button>
+      <ul class="dropdown-menu">{dropdown}</ul>
+    </div>
+  );
 };
 
 const ClearSession = () => {

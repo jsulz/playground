@@ -38,12 +38,43 @@ def spotify_tastes():
 @spotify.route("/spotify-user-info", methods=["GET"])
 def get_user_info():
     # https://developer.spotify.com/documentation/web-api/reference/get-current-users-profile
-    pass
+    access_tokens = get_access_token()
+    header_dict = {"Authorization": f"Bearer {access_tokens['access_token']}"}
+    r = requests.get("https://api.spotify.com/v1/me", headers=header_dict, timeout=5)
+    r_json = r.json()
+    return make_response(jsonify({"data": r_json}), 200)
 
 
 @spotify.route("/spotify-user-history", methods=["GET"])
 def get_user_top():
-    pass
+
+    access_tokens = get_access_token()
+    item_type = request.args["type"]
+    time_range = request.args["time_range"]
+    resource = f"https://api.spotify.com/v1/me/top/{item_type}"
+
+    header_dict = {"Authorization": f"Bearer {access_tokens['access_token']}"}
+    params_dict = {"time_range": time_range}
+
+    r = requests.get(resource, headers=header_dict, params=params_dict)
+    r_json = r.json()
+    data = []
+    for item in r_json["items"]:
+        track = {
+            "album": {
+                "name": item["album"]["name"],
+                "image": item["album"]["images"][-1]["url"],
+                "release_date": item["album"]["release_date"],
+            },
+            "artists": [artist["name"] for artist in item["artists"]],
+            "name": item["name"],
+            "popularity": item["popularity"],
+            "duration": item["duration_ms"],
+            "preview_url": item["preview_url"],
+        }
+        data.append(track)
+
+    return make_response(jsonify({"data": data}), 200)
 
 
 @spotify.route("/spotify-recommendations", methods=["GET"])
@@ -84,7 +115,6 @@ def auth():
     session["access_token"] = r_json["access_token"]
     session["refresh_token"] = r_json["refresh_token"]
     session["token_expiry_time"] = int(time.time()) + r_json["expires_in"]
-    results = {"no_token": False}
 
     return redirect(url_for("spotify.spotify_tastes"))
 
