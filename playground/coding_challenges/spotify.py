@@ -117,11 +117,12 @@ def clear_session():
 @spotify.route("/spotify-auth", methods=["GET"])
 def auth():
     code = request.args["code"]
+    redirect_url = os.environ["SPOTIFY_REDIRECT_URL"]
     token_url = "https://accounts.spotify.com/api/token"
     params_dict = {
         "grant_type": "authorization_code",
         "code": code,
-        "redirect_uri": "http://127.0.0.1:5000/spotify-auth",
+        "redirect_uri": redirect_url,
         "client_id": os.environ["CLIENT_ID"],
         "code_verifier": session["code_verifier"],
     }
