@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
 
-const userProfileInfo = {
-  display_name: "jsulz",
-  email: "j.sulzdorf@gmail.com",
-  followers: 0,
-  image: "https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228",
-};
-
 export default function Spotify() {
   const [currentlyPlaying, setCurrentlyPlaying] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
@@ -67,16 +60,27 @@ export default function Spotify() {
       <div>
         <div className="row row-cols-2">
           <div className="col">
-            {userProfile && <UserProfile userProfileInfo={userProfileInfo} />}
+            {userProfile && <UserProfile userProfileInfo={userProfile} />}
           </div>
           <div className="col">
             <Player currentlyPlaying={currentlyPlaying} />
           </div>
         </div>
         {topSongs && (
-          <TopSongs playTrack={handlePlayTrack} userTopTracks={topSongs} />
+          <TopSongs
+            playTrack={handlePlayTrack}
+            userTopTracks={topSongs}
+            timeRange={trackTimeRange}
+            setTimeRange={setTrackTerm}
+          />
         )}
-        {topArtists && <TopArtists userTopArtists={topArtists} />}
+        {topArtists && (
+          <TopArtists
+            userTopArtists={topArtists}
+            timeRange={artistTimeRange}
+            setTimeRange={setArtistTerm}
+          />
+        )}
       </div>
     </>
   );
@@ -87,15 +91,17 @@ const UserProfile = ({ userProfileInfo }) => {
     <>
       <div class="card mb-3" style={{ maxWidth: "540px" }}>
         <div class="row g-0">
-          <div class="col-md-4">
-            <img
-              src={`${userProfileInfo.image}`}
-              class="img-fluid rounded-start"
-              alt="..."
-            />
-          </div>
           <div class="col-md-8">
             <div class="card-body">
+              <div class="col-md-4">
+                {userProfileInfo.image.length > 0 && (
+                  <img
+                    src={`${userProfileInfo.image[0]}`}
+                    class="img-fluid rounded-start"
+                    alt="..."
+                  />
+                )}
+              </div>
               <h5 class="card-title">
                 Welcome, {userProfileInfo.display_name}
               </h5>
@@ -146,7 +152,7 @@ const Player = ({ currentlyPlaying }) => {
   );
 };
 
-const TopSongs = ({ userTopTracks, playTrack }) => {
+const TopSongs = ({ userTopTracks, playTrack, timeRange, setTimeRange }) => {
   const trs = userTopTracks.map((track) => {
     return (
       <tr key={track.preview_url}>
@@ -174,7 +180,8 @@ const TopSongs = ({ userTopTracks, playTrack }) => {
   return (
     <>
       <h2>
-        Top Listened to Tracks in the <TimeSpentSelector time={"short-term"} />
+        Top Listened to Tracks in the{" "}
+        <TimeSpentSelector time={timeRange} setTimeRange={setTimeRange} />
       </h2>
       <table className="table table-dark table-responsive-md">
         <thead>
@@ -193,7 +200,7 @@ const TopSongs = ({ userTopTracks, playTrack }) => {
   );
 };
 
-const TopArtists = ({ userTopArtists }) => {
+const TopArtists = ({ userTopArtists, timeRange, setTimeRange }) => {
   const trs = userTopArtists.map((artist) => {
     return (
       <tr key={artist.name}>
@@ -210,7 +217,8 @@ const TopArtists = ({ userTopArtists }) => {
   return (
     <>
       <h2>
-        Top Listened to Artists in the <TimeSpentSelector time={"short-term"} />
+        Top Listened to Artists in the{" "}
+        <TimeSpentSelector time={timeRange} setTimeRange={setTimeRange} />
       </h2>
       <table className="table table-dark table-responsive-md">
         <thead>
@@ -228,12 +236,20 @@ const TopArtists = ({ userTopArtists }) => {
   );
 };
 
-const TimeSpentSelector = ({ time }) => {
-  const periods = ["long-term", "medium-term", "short-term"];
+const TimeSpentSelector = ({ time, setTimeRange }) => {
+  const periods = ["long term", "medium term", "short term"];
+
+  const handleClick = (e) => {
+    e.preventDefault();
+    const term = e.target.innerText.split(" ").join("_");
+    setTimeRange(term);
+  };
+
   const dropdown = periods.map((period) => {
-    if (time != period) {
+    console.log(time.split("_").join(" "));
+    if (time.split("_").join(" ") !== period) {
       return (
-        <li>
+        <li onClick={handleClick}>
           <a class="dropdown-item" href="#">
             {period}
           </a>
@@ -249,7 +265,7 @@ const TimeSpentSelector = ({ time }) => {
         data-bs-toggle="dropdown"
         aria-expanded="false"
       >
-        {time}
+        {time.split("_").join(" ")}
       </button>
       <ul class="dropdown-menu">{dropdown}</ul>
     </div>

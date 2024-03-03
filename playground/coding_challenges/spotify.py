@@ -42,7 +42,14 @@ def get_user_info():
     header_dict = {"Authorization": f"Bearer {access_tokens['access_token']}"}
     r = requests.get("https://api.spotify.com/v1/me", headers=header_dict, timeout=5)
     r_json = r.json()
-    return make_response(jsonify({"data": r_json}), 200)
+    images = [r_json["images"][-1]["url"]] if len(r_json["images"]) > 0 else []
+    data = {
+        "display_name": r_json["display_name"],
+        "email": r_json["email"],
+        "followers": r_json["followers"]["total"],
+        "image": images,
+    }
+    return make_response(jsonify({"data": data}), 200)
 
 
 @spotify.route("/spotify-user-history", methods=["GET"])
