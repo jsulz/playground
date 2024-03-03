@@ -146,10 +146,11 @@ def login():
     session["code_verifier"] = code_verifier
     code_hashed = hash_code(code_verifier)
     challenge_code = code_challenge(code_hashed)
+    redirect_url = os.environ["SPOTIFY_REDIRECT_URL"]
     param_dict = {
         "client_id": os.environ["CLIENT_ID"],
         "response_type": "code",
-        "redirect_uri": "http://127.0.0.1:5000/spotify-auth",
+        "redirect_uri": redirect_url,
         "scope": "user-top-read,user-read-private,user-read-email user-read-recently-played",
         "code_challenge_method": "S256",
         "code_challenge": challenge_code,
