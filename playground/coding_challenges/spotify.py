@@ -59,20 +59,32 @@ def get_user_top():
     r = requests.get(resource, headers=header_dict, params=params_dict)
     r_json = r.json()
     data = []
-    for item in r_json["items"]:
-        track = {
-            "album": {
-                "name": item["album"]["name"],
-                "image": item["album"]["images"][-1]["url"],
-                "release_date": item["album"]["release_date"],
-            },
-            "artists": [artist["name"] for artist in item["artists"]],
-            "name": item["name"],
-            "popularity": item["popularity"],
-            "duration": item["duration_ms"],
-            "preview_url": item["preview_url"],
-        }
-        data.append(track)
+    if item_type == "tracks":
+        for item in r_json["items"]:
+            track = {
+                "album": {
+                    "name": item["album"]["name"],
+                    "image": item["album"]["images"][-1]["url"],
+                    "release_date": item["album"]["release_date"],
+                },
+                "artists": [artist["name"] for artist in item["artists"]],
+                "name": item["name"],
+                "popularity": item["popularity"],
+                "duration": item["duration_ms"],
+                "preview_url": item["preview_url"],
+            }
+            data.append(track)
+
+    if item_type == "artists":
+        for item in r_json["items"]:
+            artist = {
+                "name": item["name"],
+                "popularity": item["popularity"],
+                "followers": item["followers"]["total"],
+                "genres": item["genres"],
+                "image": item["images"][-1]["url"],
+            }
+            data.append(artist)
 
     return make_response(jsonify({"data": data}), 200)
 

@@ -7,44 +7,6 @@ const userProfileInfo = {
   image: "https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228",
 };
 
-const userTopArtists = [
-  {
-    name: "The Districts",
-    popularity: 37,
-    followers: 100750,
-    genres: ["lancaster pa indie", "grungecore", "popmastic"],
-    image: "https://i.scdn.co/image/ab6761610000f1789f4013bf7a84aac2e867961d",
-  },
-  {
-    name: "The Districts",
-    popularity: 37,
-    followers: 100750,
-    genres: ["lancaster pa indie", "grungecore", "popmastic"],
-    image: "https://i.scdn.co/image/ab6761610000f1789f4013bf7a84aac2e867961d",
-  },
-  {
-    name: "The Districts",
-    popularity: 37,
-    followers: 100750,
-    genres: ["lancaster pa indie", "grungecore", "popmastic"],
-    image: "https://i.scdn.co/image/ab6761610000f1789f4013bf7a84aac2e867961d",
-  },
-  {
-    name: "The Districts",
-    popularity: 37,
-    followers: 100750,
-    genres: ["lancaster pa indie", "grungecore", "popmastic"],
-    image: "https://i.scdn.co/image/ab6761610000f1789f4013bf7a84aac2e867961d",
-  },
-  {
-    name: "The Districts",
-    popularity: 37,
-    followers: 100750,
-    genres: ["lancaster pa indie", "grungecore", "popmastic"],
-    image: "https://i.scdn.co/image/ab6761610000f1789f4013bf7a84aac2e867961d",
-  },
-];
-
 export default function Spotify() {
   const [currentlyPlaying, setCurrentlyPlaying] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
@@ -79,21 +41,21 @@ export default function Spotify() {
   }, [trackTimeRange]);
 
   useEffect(() => {
-    const paramString = "type=tracks&time_range=" + trackTimeRange;
+    const paramString = "type=artists&time_range=" + artistTimeRange;
     const params = new URLSearchParams(paramString);
     let active = true;
     fetch("/spotify-user-history?" + params)
       .then((response) => response.json())
       .then((data) => {
         if (active) {
-          setTopSongs(data.data);
+          setTopArtists(data.data);
         }
       });
 
     return () => {
       active = false;
     };
-  }, [trackTimeRange]);
+  }, [artistTimeRange]);
 
   const handlePlayTrack = (e, track) => {
     e.preventDefault();
@@ -114,7 +76,7 @@ export default function Spotify() {
         {topSongs && (
           <TopSongs playTrack={handlePlayTrack} userTopTracks={topSongs} />
         )}
-        {topArtists && <TopArtists userTopArtists={userTopArtists} />}
+        {topArtists && <TopArtists userTopArtists={topArtists} />}
       </div>
     </>
   );
@@ -163,6 +125,7 @@ const Player = ({ currentlyPlaying }) => {
         <>
           <audio
             controls
+            autoPlay
             controlslist="play timeline"
             src={currentlyPlaying.preview_url}
           ></audio>
