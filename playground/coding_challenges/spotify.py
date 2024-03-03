@@ -12,6 +12,7 @@ from flask import (
     jsonify,
     render_template,
     make_response,
+    url_for,
 )
 
 spotify = Blueprint("spotify", __name__, template_folder="templates")
@@ -27,11 +28,8 @@ def spotify_tastes():
             "no_token": True,
         }
         return render_template("coding-challenges/spotify.html.jinja", results=results)
-    # If they do, then build up the page
-    # get profile information
-    # get user's top tracks
-    # get users's top artists
 
+    # If they do, then return a render and the front-end will make the API calls necessary to build up the frontend
     return render_template("coding-challenges/spotify.html.jinja", results={})
     # return redirect("/spotify-login")
     # return render_template("coding-challenges/spotify.html.jinja")
@@ -53,9 +51,10 @@ def get_user_recommendations():
     pass
 
 
-@spotify.route("/spotify-clear-session", methods=["POST"])
+@spotify.route("/spotify-clear-session", methods=["GET", "POST"])
 def clear_session():
     # @TODO Handle a bunch of stuff related to guard conditions
+
     # pop all the session variables we set
     session.pop("access_token", None)
     session.pop("refresh_token", None)
@@ -81,13 +80,13 @@ def auth():
 
     r = requests.post(token_url, params=params_dict, headers=headers_dict, timeout=10)
     r_json = r.json()
-    print(r_json)
+    # print(r_json)
     session["access_token"] = r_json["access_token"]
     session["refresh_token"] = r_json["refresh_token"]
     session["token_expiry_time"] = int(time.time()) + r_json["expires_in"]
     results = {"no_token": False}
 
-    return render_template("coding-challenges/spotify.html.jinja", results=results)
+    return redirect(url_for("spotify.spotify_tastes"))
 
 
 @spotify.route("/spotify-login", methods=["GET"])
@@ -101,7 +100,7 @@ def login():
         "client_id": os.environ["CLIENT_ID"],
         "response_type": "code",
         "redirect_uri": "http://127.0.0.1:5000/spotify-auth",
-        "scope": "user-top-read,user-read-private,user-read-email",
+        "scope": "user-top-read,user-read-private,user-read-email user-read-recently-played",
         "code_challenge_method": "S256",
         "code_challenge": challenge_code,
     }
@@ -139,6 +138,7 @@ def get_access_token():
     except KeyError:
         return False
     # if the current time is greater than the token_expiry_time then get a new token
+    print(token_expiry_time, int(time.time()))
     if token_expiry_time < int(time.time()):
         access_token, refresh_token = refresh_access_token(refresh_token)
 
@@ -153,23 +153,25 @@ def get_access_token():
 def refresh_access_token(refresh_token):
     # https://developer.spotify.com/documentation/web-api/tutorials/refreshing-tokens
     token_url = "https://accounts.spotify.com/api/token"
+    print(refresh_token)
     headers_dict = {
         "Content-Type": "application/x-www-form-urlencoded",
     }
-    param_dict = {
+    body_data = {
         "grant_type": "refresh_token",
         "refresh_token": refresh_token,
         "client_id": os.environ["CLIENT_ID"],
     }
 
-    r = requests.post(token_url, params=param_dict, headers=headers_dict)
+    r = requests.post(token_url, data=body_data, headers=headers_dict, timeout=10)
 
     # @TODO check statuses/handle failures
     r_json = r.json()
+    # print(r_json)
 
     # @TODO Pull this all off into it's own function
     session["access_token"] = r_json["access_token"]
     session["refresh_token"] = r_json["refresh_token"]
-    session["token_expiry_time"] = int(time.time()) + r.json["expires_in"]
+    session["token_expiry_time"] = int(time.time()) + r_json["expires_in"]
 
     return r_json["access_token"], r_json["refresh_token"]
