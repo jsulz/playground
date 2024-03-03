@@ -7,6 +7,44 @@ const userProfileInfo = {
   image: "https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228",
 };
 
+const userTopArtists = [
+  {
+    name: "The Districts",
+    popularity: 37,
+    followers: 100750,
+    genres: ["lancaster pa indie", "grungecore", "popmastic"],
+    image: "https://i.scdn.co/image/ab6761610000f1789f4013bf7a84aac2e867961d",
+  },
+  {
+    name: "The Districts",
+    popularity: 37,
+    followers: 100750,
+    genres: ["lancaster pa indie", "grungecore", "popmastic"],
+    image: "https://i.scdn.co/image/ab6761610000f1789f4013bf7a84aac2e867961d",
+  },
+  {
+    name: "The Districts",
+    popularity: 37,
+    followers: 100750,
+    genres: ["lancaster pa indie", "grungecore", "popmastic"],
+    image: "https://i.scdn.co/image/ab6761610000f1789f4013bf7a84aac2e867961d",
+  },
+  {
+    name: "The Districts",
+    popularity: 37,
+    followers: 100750,
+    genres: ["lancaster pa indie", "grungecore", "popmastic"],
+    image: "https://i.scdn.co/image/ab6761610000f1789f4013bf7a84aac2e867961d",
+  },
+  {
+    name: "The Districts",
+    popularity: 37,
+    followers: 100750,
+    genres: ["lancaster pa indie", "grungecore", "popmastic"],
+    image: "https://i.scdn.co/image/ab6761610000f1789f4013bf7a84aac2e867961d",
+  },
+];
+
 const userTopTracks = [
   {
     album: {
@@ -89,8 +127,6 @@ const userTopTracks = [
 ];
 
 export default function Spotify() {
-  let userTopTracks = null;
-  let userTopArtists = null;
   useEffect(() => {}, []);
 
   return (
@@ -100,8 +136,8 @@ export default function Spotify() {
           test
         </a>
         <UserProfile userProfileInfo={userProfileInfo} />
-        <TopSongs />
-        <TopArtists />
+        <TopSongs userTopTracks={userTopTracks} />
+        <TopArtists userTopArtists={userTopArtists} />
         <ClearSession />
       </div>
     </>
@@ -143,19 +179,94 @@ const UserProfile = ({ userProfileInfo }) => {
 };
 
 const TopSongs = ({ userTopTracks }) => {
+  const trs = userTopTracks.map((track) => {
+    return (
+      <tr key={track.preview_url}>
+        <td>
+          <img src={track.album.image} />
+        </td>
+        <td>
+          {track.name} <br />{" "}
+          <small>
+            Artists: {track.artists.map((artist) => artist).join(", ")}
+          </small>
+        </td>
+        <td>{track.album.name}</td>
+        <td>{track.album.release_date}</td>
+        <td>{track.duration}</td>
+        <td>
+          <audio
+            controls
+            controlslist="play timeline"
+            src={track.preview_url}
+          ></audio>
+        </td>
+      </tr>
+    );
+  });
   return (
     <>
-      <h2>Top Songs</h2>
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th>Track</th>
+            <th>Album</th>
+            <th>Date Released</th>
+            <th>Length</th>
+            <th>Audio Preview</th>
+          </tr>
+        </thead>
+        <tbody>{trs}</tbody>
+      </table>
     </>
   );
 };
 
+/**
+  {
+    name: "The Districts",
+    popularity: 37,
+    followers: 100750,
+    genres: ["lancaster pa indie", "grungecore", "popmastic"],
+    image: "https://i.scdn.co/image/ab6761610000f1789f4013bf7a84aac2e867961d",
+  },
+ */
+
 const TopArtists = ({ userTopArtists }) => {
+  const trs = userTopArtists.map((artist) => {
+    return (
+      <tr key={artist.name}>
+        <td>
+          <img src={artist.image} />
+        </td>
+        <td>{artist.name}</td>
+        <td>{artist.genres.map((genre) => genre).join(", ")}</td>
+        <td>{artist.followers}</td>
+        <td>{artist.popularity}</td>
+      </tr>
+    );
+  });
   return (
     <>
-      <h2>Top Artists</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Genres</th>
+            <th>Followers</th>
+            <th>Popularity</th>
+          </tr>
+        </thead>
+        <tbody>{trs}</tbody>
+      </table>
     </>
   );
+};
+
+const TimeRange = () => {
+  // button group
 };
 
 const ClearSession = () => {
