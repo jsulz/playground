@@ -7,12 +7,20 @@ export default function Spotify() {
   const [topArtists, setTopArtists] = useState(null);
   const [trackTimeRange, setTrackTerm] = useState("short_term");
   const [artistTimeRange, setArtistTerm] = useState("short_term");
+  const [oauthToken, setOauthToken] = useState(null);
+  const [whichPlayer, setWhichPlayer] = useState(null);
 
   useEffect(() => {
     fetch("/spotify-user-info")
       .then((response) => response.json())
       .then((data) => {
         setUserProfile(data.data);
+        setWhichPlayer(data.data.product);
+      });
+    fetch("/spotify-auth-token")
+      .then((response) => response.json())
+      .then((data) => {
+        setOauthToken(data.data);
       });
   }, []);
 
@@ -52,8 +60,42 @@ export default function Spotify() {
 
   const handlePlayTrack = (e, track) => {
     e.preventDefault();
-    setCurrentlyPlaying(track);
+    if (whichPlayer !== "premium") {
+      setCurrentlyPlaying(track);
+    } else {
+      console.log(track.uri);
+      const options = {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${oauthToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ uris: [track.uri], position_ms: 0 }),
+      };
+      fetch("https://api.spotify.com/v1/me/player/play", options)
+        .then((response) => {
+          console.log(response);
+          return response.json();
+        })
+        .then((data) => {
+          console.log(data);
+        });
+    }
   };
+
+  let player = null;
+  if (whichPlayer) {
+    if (whichPlayer !== "premium") {
+      player = <Player currentlyPlaying={currentlyPlaying} />;
+    } else {
+      player = (
+        <SpotifyPlayer
+          currentlyPlaying={currentlyPlaying}
+          oauthToken={oauthToken}
+        />
+      );
+    }
+  }
 
   return (
     <>
@@ -62,9 +104,7 @@ export default function Spotify() {
           <div className="col">
             {userProfile && <UserProfile userProfileInfo={userProfile} />}
           </div>
-          <div className="col">
-            <Player currentlyPlaying={currentlyPlaying} />
-          </div>
+          <div className="col">{userProfile && player}</div>
         </div>
         {topSongs && (
           <TopSongs
@@ -150,6 +190,121 @@ const Player = ({ currentlyPlaying }) => {
       )}
     </>
   );
+};
+
+const TRACK = {
+  name: "",
+  album: {
+    images: [{ url: "" }],
+  },
+  artists: [{ name: "" }],
+};
+
+const SpotifyPlayer = ({ currentlyPlaying, oauthToken }) => {
+  const [is_paused, setPaused] = useState(false);
+  const [is_active, setActive] = useState(false);
+  const [player, setPlayer] = useState(undefined);
+  const [current_track, setTrack] = useState(TRACK);
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://sdk.scdn.co/spotify-player.js";
+    script.async = true;
+
+    document.body.appendChild(script);
+
+    window.onSpotifyWebPlaybackSDKReady = () => {
+      const player = new window.Spotify.Player({
+        name: "Web Playback SDK",
+        getOAuthToken: (cb) => {
+          cb(oauthToken);
+        },
+        volume: 0.5,
+      });
+
+      setPlayer(player);
+
+      player.addListener("ready", ({ device_id }) => {
+        const options = {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${oauthToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ device_ids: [device_id] }),
+        };
+        fetch("https://api.spotify.com/v1/me/player", options)
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+          });
+      });
+
+      player.addListener("not_ready", ({ device_id }) => {
+        console.log("Device ID has gone offline", device_id);
+      });
+
+      player.addListener("player_state_changed", (state) => {
+        if (!state) {
+          return;
+        }
+
+        setTrack(state.track_window.current_track);
+        setPaused(state.paused);
+
+        player.getCurrentState().then((state) => {
+          !state ? setActive(false) : setActive(true);
+        });
+      });
+
+      player.connect();
+    };
+  }, []);
+  console.log(current_track);
+
+  if (!is_active) {
+    return (
+      <>
+        <div className="container">
+          <div className="main-wrapper">
+            <b>
+              {" "}
+              Instance not active. Transfer your playback using your Spotify app{" "}
+            </b>
+          </div>
+        </div>
+      </>
+    );
+  } else {
+    return (
+      <>
+        <div className="container">
+          <div className="main-wrapper">
+            <img
+              src={current_track.album.images[0].url}
+              className="now-playing__cover"
+              alt=""
+            />
+
+            <div className="now-playing__side">
+              <div className="now-playing__name">{current_track.name}</div>
+              <div className="now-playing__artist">
+                {current_track.artists[0].name}
+              </div>
+              <button
+                className="btn-spotify"
+                onClick={() => {
+                  player.togglePlay();
+                }}
+              >
+                {is_paused ? "PLAY" : "PAUSE"}
+              </button>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
 };
 
 const TopSongs = ({ userTopTracks, playTrack, timeRange, setTimeRange }) => {
@@ -246,7 +401,6 @@ const TimeSpentSelector = ({ time, setTimeRange }) => {
   };
 
   const dropdown = periods.map((period) => {
-    console.log(time.split("_").join(" "));
     if (time.split("_").join(" ") !== period) {
       return (
         <li onClick={handleClick}>
@@ -281,7 +435,6 @@ const ClearSession = () => {
     fetch("/spotify-clear-session", options)
       .then((response) => response.json())
       .then((data) => {
-        console.log("data");
         if (!data.error) {
           window.location.reload();
         } else {

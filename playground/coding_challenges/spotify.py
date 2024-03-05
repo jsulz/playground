@@ -48,6 +48,7 @@ def get_user_info():
         "email": r_json["email"],
         "followers": r_json["followers"]["total"],
         "image": images,
+        "product": r_json["product"],
     }
     return make_response(jsonify({"data": data}), 200)
 
@@ -68,6 +69,7 @@ def get_user_top():
     data = []
     if item_type == "tracks":
         for item in r_json["items"]:
+            print(item)
             track = {
                 "album": {
                     "name": item["album"]["name"],
@@ -79,6 +81,7 @@ def get_user_top():
                 "popularity": item["popularity"],
                 "duration": item["duration_ms"],
                 "preview_url": item["preview_url"],
+                "uri": item["uri"],
             }
             data.append(track)
 
@@ -94,11 +97,6 @@ def get_user_top():
             data.append(artist)
 
     return make_response(jsonify({"data": data}), 200)
-
-
-@spotify.route("/spotify-recommendations", methods=["GET"])
-def get_user_recommendations():
-    pass
 
 
 @spotify.route("/spotify-clear-session", methods=["GET", "POST"])
@@ -151,13 +149,19 @@ def login():
         "client_id": os.environ["CLIENT_ID"],
         "response_type": "code",
         "redirect_uri": redirect_url,
-        "scope": "user-top-read,user-read-private,user-read-email user-read-recently-played",
+        "scope": "user-top-read,user-read-private,user-read-email user-read-recently-played,streaming,user-modify-playback-state",
         "code_challenge_method": "S256",
         "code_challenge": challenge_code,
     }
     r_url = requests.get(authURL, params=param_dict, timeout=10)
     r_url = r_url.url
     return redirect(r_url)
+
+
+@spotify.route("/spotify-auth-token", methods=["GET"])
+def auth_token():
+    tokens = get_access_token()
+    return make_response(jsonify({"data": tokens["access_token"]}), 200)
 
 
 def code_generator(length):
