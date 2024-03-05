@@ -63,7 +63,6 @@ export default function Spotify() {
     if (whichPlayer !== "premium") {
       setCurrentlyPlaying(track);
     } else {
-      console.log(track.uri);
       const options = {
         method: "PUT",
         headers: {
@@ -269,7 +268,8 @@ const SpotifyPlayer = ({ currentlyPlaying, oauthToken }) => {
           <div className="main-wrapper">
             <b>
               {" "}
-              Instance not active. Transfer your playback using your Spotify app{" "}
+              Instance not active. Wait one moment while we switch to this
+              device.{" "}
             </b>
           </div>
         </div>
