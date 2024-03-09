@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 
+const currentlyViewing = "Artists";
+
 export default function Spotify() {
   const [currentlyPlaying, setCurrentlyPlaying] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
@@ -10,6 +12,7 @@ export default function Spotify() {
   const [oauthToken, setOauthToken] = useState(null);
   const [whichPlayer, setWhichPlayer] = useState(null);
   const [player, setPlayer] = useState(undefined);
+  const [currentlyViewing, setCurrentlyViewing] = useState("Songs");
 
   useEffect(() => {
     fetch("/spotify-user-info")
@@ -99,6 +102,28 @@ export default function Spotify() {
     }
   }
 
+  let table = null;
+  if (topSongs && currentlyViewing == "Songs") {
+    table = (
+      <TopSongs
+        playTrack={handlePlayTrack}
+        userTopTracks={topSongs}
+        timeRange={trackTimeRange}
+        setTimeRange={setTrackTerm}
+        currentlyPlaying={currentlyPlaying}
+        player={player}
+      />
+    );
+  } else if (topArtists && currentlyViewing == "Artists") {
+    table = (
+      <TopArtists
+        userTopArtists={topArtists}
+        timeRange={artistTimeRange}
+        setTimeRange={setArtistTerm}
+      />
+    );
+  }
+
   return (
     <>
       <div>
@@ -108,27 +133,11 @@ export default function Spotify() {
           </div>
           <div className="col">{userProfile && mediaPlayer}</div>
         </div>
-        <div className="row mb-3">
-          {topSongs && (
-            <TopSongs
-              playTrack={handlePlayTrack}
-              userTopTracks={topSongs}
-              timeRange={trackTimeRange}
-              setTimeRange={setTrackTerm}
-              currentlyPlaying={currentlyPlaying}
-              player={player}
-            />
-          )}
-        </div>
-        <div className="row mb-3">
-          {topArtists && (
-            <TopArtists
-              userTopArtists={topArtists}
-              timeRange={artistTimeRange}
-              setTimeRange={setArtistTerm}
-            />
-          )}
-        </div>
+        <ToggleArtistsSongs
+          currentlyViewing={currentlyViewing}
+          setCurrentlyViewing={setCurrentlyViewing}
+        />
+        <div className="row mb-3">{table}</div>
       </div>
     </>
   );
@@ -167,6 +176,41 @@ const UserProfile = ({ userProfileInfo }) => {
             </div>
           </div>
         </div>
+      </div>
+    </>
+  );
+};
+
+const ToggleArtistsSongs = ({ currentlyViewing, setCurrentlyViewing }) => {
+  const options = ["Songs", "Artists"];
+  const handleChange = (e) => {
+    setCurrentlyViewing(e.target.name);
+  };
+  return (
+    <>
+      <div
+        class="btn-group mb-5 btn-group-lg"
+        role="group"
+        aria-label="Basic radio toggle button group"
+      >
+        {options.map((option) => {
+          return (
+            <>
+              <input
+                type="radio"
+                class="btn-check"
+                name={option}
+                id={option}
+                autocomplete="off"
+                onChange={(e) => handleChange(e)}
+                checked={currentlyViewing === option}
+              />
+              <label class="btn btn-outline-primary" htmlFor={option}>
+                {option}
+              </label>
+            </>
+          );
+        })}
       </div>
     </>
   );
@@ -337,7 +381,6 @@ const TopSongs = ({
   currentlyPlaying,
   player,
 }) => {
-  console.log(currentlyPlaying);
   const durationTransform = (duration_ms) => {
     const duration_s = ~~(duration_ms / 1000);
     const minutes = Math.floor(duration_s / 60);
