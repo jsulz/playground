@@ -226,29 +226,32 @@ const ToggleArtistsSongs = ({ currentlyViewing, setCurrentlyViewing }) => {
   };
   return (
     <>
-      <div
-        class="btn-group mb-5 btn-group-lg"
-        role="group"
-        aria-label="Basic radio toggle button group"
-      >
-        {options.map((option) => {
-          return (
-            <>
-              <input
-                type="radio"
-                class="btn-check"
-                name={option}
-                id={option}
-                autocomplete="off"
-                onChange={(e) => handleChange(e)}
-                checked={currentlyViewing === option}
-              />
-              <label class="btn btn-outline-primary" htmlFor={option}>
-                {option}
-              </label>
-            </>
-          );
-        })}
+      <h3>View your top:</h3>
+      <div className="row mb-5 align-items-center">
+        <div
+          class="col btn-group btn-group-md"
+          role="group"
+          aria-label="Basic radio toggle button group"
+        >
+          {options.map((option) => {
+            return (
+              <>
+                <input
+                  type="radio"
+                  class="btn-check"
+                  name={option}
+                  id={option}
+                  autocomplete="off"
+                  onChange={(e) => handleChange(e)}
+                  checked={currentlyViewing === option}
+                />
+                <label class="btn btn-outline-primary" htmlFor={option}>
+                  {option}
+                </label>
+              </>
+            );
+          })}
+        </div>
       </div>
     </>
   );
