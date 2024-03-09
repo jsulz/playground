@@ -73,7 +73,6 @@ export default function Spotify() {
       };
       fetch("https://api.spotify.com/v1/me/player/play", options)
         .then((response) => {
-          console.log(response);
           return response.json();
         })
         .then((data) => {
@@ -259,7 +258,15 @@ const SpotifyPlayer = ({ currentlyPlaying, oauthToken }) => {
       player.connect();
     };
   }, []);
-  console.log(current_track);
+
+  const play = <i class="bi bi-play-circle"> Play</i>;
+  const pause = <i class="bi bi-pause-circle"> Pause</i>;
+
+  // sort the images so the smallest one is first
+  if (is_active) {
+    current_track.album.images.sort((a, b) => a.height - b.height);
+    console.log(current_track.album.images);
+  }
 
   if (!is_active) {
     return (
@@ -278,27 +285,35 @@ const SpotifyPlayer = ({ currentlyPlaying, oauthToken }) => {
   } else {
     return (
       <>
-        <div className="container">
-          <div className="main-wrapper">
-            <img
-              src={current_track.album.images[0].url}
-              className="now-playing__cover"
-              alt=""
-            />
-
-            <div className="now-playing__side">
-              <div className="now-playing__name">{current_track.name}</div>
-              <div className="now-playing__artist">
-                {current_track.artists[0].name}
+        <div className="card mb-3" style={{ maxWidth: "540px" }}>
+          <div className="g-0">
+            <div className="card-body row row-cols-lg-2 row-cols-md-1">
+              <div className="col col-lg-2">
+                <img
+                  src={current_track.album.images[0].url}
+                  className="now-playing__cover"
+                  alt=""
+                />
               </div>
-              <button
-                className="btn-spotify"
-                onClick={() => {
-                  player.togglePlay();
-                }}
-              >
-                {is_paused ? "PLAY" : "PAUSE"}
-              </button>
+              <div className="col col-lg-10">
+                <h5 className="card-title">
+                  Now Playing: {current_track.name}
+                </h5>
+                <p className="card-text">
+                  <small className="text-body-secondary">
+                    By: {current_track.artists[0].name}
+                  </small>
+                  <br />
+                  <button
+                    className="btn-spotify btn btn-primary mt-2"
+                    onClick={() => {
+                      player.togglePlay();
+                    }}
+                  >
+                    {is_paused ? play : pause}
+                  </button>
+                </p>
+              </div>
             </div>
           </div>
         </div>
