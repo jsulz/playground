@@ -9,6 +9,7 @@ export default function Spotify() {
   const [artistTimeRange, setArtistTerm] = useState("short_term");
   const [oauthToken, setOauthToken] = useState(null);
   const [whichPlayer, setWhichPlayer] = useState(null);
+  const [player, setPlayer] = useState(undefined);
 
   useEffect(() => {
     fetch("/spotify-user-info")
@@ -73,23 +74,26 @@ export default function Spotify() {
       };
       fetch("https://api.spotify.com/v1/me/player/play", options)
         .then((response) => {
-          return response.json();
+          console.log(response);
+          return response.text();
         })
         .then((data) => {
-          console.log(data);
+          setCurrentlyPlaying(track);
         });
     }
   };
 
-  let player = null;
+  let mediaPlayer = null;
   if (whichPlayer) {
     if (whichPlayer !== "premium") {
-      player = <Player currentlyPlaying={currentlyPlaying} />;
+      mediaPlayer = <Player currentlyPlaying={currentlyPlaying} />;
     } else {
-      player = (
+      mediaPlayer = (
         <SpotifyPlayer
           currentlyPlaying={currentlyPlaying}
           oauthToken={oauthToken}
+          player={player}
+          setPlayer={setPlayer}
         />
       );
     }
@@ -102,7 +106,7 @@ export default function Spotify() {
           <div className="col">
             {userProfile && <UserProfile userProfileInfo={userProfile} />}
           </div>
-          <div className="col">{userProfile && player}</div>
+          <div className="col">{userProfile && mediaPlayer}</div>
         </div>
         <div className="row mb-3">
           {topSongs && (
@@ -111,6 +115,8 @@ export default function Spotify() {
               userTopTracks={topSongs}
               timeRange={trackTimeRange}
               setTimeRange={setTrackTerm}
+              currentlyPlaying={currentlyPlaying}
+              player={player}
             />
           )}
         </div>
@@ -202,10 +208,9 @@ const TRACK = {
   artists: [{ name: "" }],
 };
 
-const SpotifyPlayer = ({ currentlyPlaying, oauthToken }) => {
+const SpotifyPlayer = ({ currentlyPlaying, oauthToken, player, setPlayer }) => {
   const [is_paused, setPaused] = useState(false);
   const [is_active, setActive] = useState(false);
-  const [player, setPlayer] = useState(undefined);
   const [current_track, setTrack] = useState(TRACK);
 
   useEffect(() => {
@@ -236,9 +241,9 @@ const SpotifyPlayer = ({ currentlyPlaying, oauthToken }) => {
           body: JSON.stringify({ device_ids: [device_id] }),
         };
         fetch("https://api.spotify.com/v1/me/player", options)
-          .then((response) => response.json())
+          .then((response) => response.text())
           .then((data) => {
-            console.log(data);
+            //console.log(data);
           });
       });
 
@@ -250,13 +255,16 @@ const SpotifyPlayer = ({ currentlyPlaying, oauthToken }) => {
         if (!state) {
           return;
         }
-
         setTrack(state.track_window.current_track);
         setPaused(state.paused);
 
         player.getCurrentState().then((state) => {
           !state ? setActive(false) : setActive(true);
         });
+      });
+
+      player.setName("Playground - Spotify Tastes").then(() => {
+        console.log("successfully set name!");
       });
 
       player.connect();
@@ -269,7 +277,6 @@ const SpotifyPlayer = ({ currentlyPlaying, oauthToken }) => {
   // sort the images so the smallest one is first
   if (is_active) {
     current_track.album.images.sort((a, b) => a.height - b.height);
-    console.log(current_track.album.images);
   }
 
   if (!is_active) {
@@ -322,50 +329,79 @@ const SpotifyPlayer = ({ currentlyPlaying, oauthToken }) => {
   }
 };
 
-const TopSongs = ({ userTopTracks, playTrack, timeRange, setTimeRange }) => {
+const TopSongs = ({
+  userTopTracks,
+  playTrack,
+  timeRange,
+  setTimeRange,
+  currentlyPlaying,
+  player,
+}) => {
+  console.log(currentlyPlaying);
+  const durationTransform = (duration_ms) => {
+    const duration_s = ~~(duration_ms / 1000);
+    const minutes = Math.floor(duration_s / 60);
+    const remainder_s = duration_s % 60;
+    return `${minutes}:${remainder_s}`;
+  };
+
+  const handleTableButtonClick = (e, track) => {
+    if (currentlyPlaying && track.name == currentlyPlaying.name) {
+      player.togglePlay();
+    } else {
+      playTrack(e, track);
+    }
+  };
+
   const trs = userTopTracks.map((track) => {
+    let icon = null;
+    const play = <i class="bi bi-play-circle"></i>;
+    const pause = <i class="bi bi-pause-circle"></i>;
+    if (currentlyPlaying) {
+      icon = track.name === currentlyPlaying.name ? pause : play;
+    } else {
+      icon = play;
+    }
+
     return (
       <tr key={track.preview_url}>
         <td>
           <img src={track.album.image} />
         </td>
         <td>
-          {track.name} <br /> <small>Artists: {track.artists.join(", ")}</small>
+          {track.name} <br />{" "}
+          <small>Artist(s): {track.artists.join(", ")}</small>
         </td>
         <td>{track.album.name}</td>
         <td>{track.album.release_date}</td>
-        <td>{track.duration}</td>
+        <td>{durationTransform(track.duration)}</td>
         <td>
           <button
-            onClick={(e) => playTrack(e, track)}
+            onClick={(e) => handleTableButtonClick(e, track)}
             type="button"
             class="btn btn-secondary"
           >
-            <i class="bi bi-play-circle"></i>
+            {icon}
           </button>
         </td>
       </tr>
     );
   });
+  const th_data = [
+    "",
+    "Track",
+    "Album",
+    "Date Released",
+    "Length",
+    "Play Audio",
+  ];
   return (
     <>
       <h2>
         Top Listened to Tracks in the{" "}
         <TimeSpentSelector time={timeRange} setTimeRange={setTimeRange} />
       </h2>
-      <table className="table table-dark rounded-3 overflow-hidden table-responsive-md">
-        <thead>
-          <tr>
-            <th></th>
-            <th>Track</th>
-            <th>Album</th>
-            <th>Date Released</th>
-            <th>Length</th>
-            <th>Audio Preview</th>
-          </tr>
-        </thead>
-        <tbody>{trs}</tbody>
-      </table>
+      <DataTable trs={trs} th_data={th_data} />
     </>
   );
 };
@@ -384,25 +420,29 @@ const TopArtists = ({ userTopArtists, timeRange, setTimeRange }) => {
       </tr>
     );
   });
+  const th_data = ["", "Name", "Genres", "Followers", "Popularity"];
   return (
     <>
       <h2>
         Top Listened to Artists in the{" "}
         <TimeSpentSelector time={timeRange} setTimeRange={setTimeRange} />
       </h2>
-      <table className="table table-dark rounded-3 overflow-hidden table-responsive-md">
+      <DataTable trs={trs} th_data={th_data} />
+    </>
+  );
+};
+
+const DataTable = ({ trs, th_data }) => {
+  const ths = th_data.map((th) => <th>{th}</th>);
+  return (
+    <div className="table-responsive-md">
+      <table className="table table-dark rounded-3 overflow-hidden">
         <thead>
-          <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>Genres</th>
-            <th>Followers</th>
-            <th>Popularity</th>
-          </tr>
+          <tr>{ths}</tr>
         </thead>
         <tbody>{trs}</tbody>
       </table>
-    </>
+    </div>
   );
 };
 
