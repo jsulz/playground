@@ -79,11 +79,32 @@ a:active {
   border-color: var(--bs-tertiary-rgb);
 }
 
+.btn.btn-outline-primary {
+  border-color: var(--bs-tertiary-rgb);
+  color: var(--bs-tertiary-rgb);
+  --bs-btn-active-bg: var(--bs-tertiary-rgb);
+}
+
+.btn.show.btn-outline-primary {
+  color: white;
+}
+
 .btn.btn-primary:hover,
 .btn.btn-primary:active,
-.btn.btn-primary:target {
+.btn.btn-primary:target,
+.btn.btn-outline-primary:hover,
+.btn.btn-outline-primary:active,
+.btn.btn-outline-primary:target,
+.btn.btn-outline-primary:focus-visible {
   background: var(--bs-tertiary-rgb-active);
   border-color: var(--bs-tertiary-rgb-active);
+}
+
+.btn.btn-outline-primary:hover,
+.btn.btn-outline-primary:active,
+.btn.btn-outline-primary:target,
+.btn.btn-outline-primary:focus-visible {
+  color: white !important;
 }
 
 /* Navigation */

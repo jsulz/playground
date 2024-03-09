@@ -98,27 +98,31 @@ export default function Spotify() {
   return (
     <>
       <div>
-        <div className="row row-cols-2">
+        <div className="row row-cols-lg-2 row-cols-1 mb-3">
           <div className="col">
             {userProfile && <UserProfile userProfileInfo={userProfile} />}
           </div>
           <div className="col">{userProfile && player}</div>
         </div>
-        {topSongs && (
-          <TopSongs
-            playTrack={handlePlayTrack}
-            userTopTracks={topSongs}
-            timeRange={trackTimeRange}
-            setTimeRange={setTrackTerm}
-          />
-        )}
-        {topArtists && (
-          <TopArtists
-            userTopArtists={topArtists}
-            timeRange={artistTimeRange}
-            setTimeRange={setArtistTerm}
-          />
-        )}
+        <div className="row mb-3">
+          {topSongs && (
+            <TopSongs
+              playTrack={handlePlayTrack}
+              userTopTracks={topSongs}
+              timeRange={trackTimeRange}
+              setTimeRange={setTrackTerm}
+            />
+          )}
+        </div>
+        <div className="row mb-3">
+          {topArtists && (
+            <TopArtists
+              userTopArtists={topArtists}
+              timeRange={artistTimeRange}
+              setTimeRange={setArtistTerm}
+            />
+          )}
+        </div>
       </div>
     </>
   );
@@ -286,34 +290,30 @@ const SpotifyPlayer = ({ currentlyPlaying, oauthToken }) => {
     return (
       <>
         <div className="card mb-3" style={{ maxWidth: "540px" }}>
-          <div className="g-0">
-            <div className="card-body row row-cols-lg-2 row-cols-md-1">
-              <div className="col col-lg-2">
-                <img
-                  src={current_track.album.images[0].url}
-                  className="now-playing__cover"
-                  alt=""
-                />
-              </div>
-              <div className="col col-lg-10">
-                <h5 className="card-title">
-                  Now Playing: {current_track.name}
-                </h5>
-                <p className="card-text">
-                  <small className="text-body-secondary">
-                    By: {current_track.artists[0].name}
-                  </small>
-                  <br />
-                  <button
-                    className="btn-spotify btn btn-primary mt-2"
-                    onClick={() => {
-                      player.togglePlay();
-                    }}
-                  >
-                    {is_paused ? play : pause}
-                  </button>
-                </p>
-              </div>
+          <div className="card-body row row-cols-lg-2 row-cols-1 g-2">
+            <div className="col col-lg-3">
+              <img
+                src={current_track.album.images[0].url}
+                className="now-playing__cover"
+                alt=""
+              />
+            </div>
+            <div className="col col-lg-9">
+              <h5 className="card-title">Now Playing: {current_track.name}</h5>
+              <p className="card-text">
+                <small className="text-body-secondary">
+                  By: {current_track.artists[0].name}
+                </small>
+                <br />
+                <button
+                  className="btn-spotify btn btn-primary mt-2"
+                  onClick={() => {
+                    player.togglePlay();
+                  }}
+                >
+                  {is_paused ? play : pause}
+                </button>
+              </p>
             </div>
           </div>
         </div>
@@ -353,7 +353,7 @@ const TopSongs = ({ userTopTracks, playTrack, timeRange, setTimeRange }) => {
         Top Listened to Tracks in the{" "}
         <TimeSpentSelector time={timeRange} setTimeRange={setTimeRange} />
       </h2>
-      <table className="table table-dark table-responsive-md">
+      <table className="table table-dark rounded-3 overflow-hidden table-responsive-md">
         <thead>
           <tr>
             <th></th>
@@ -390,7 +390,7 @@ const TopArtists = ({ userTopArtists, timeRange, setTimeRange }) => {
         Top Listened to Artists in the{" "}
         <TimeSpentSelector time={timeRange} setTimeRange={setTimeRange} />
       </h2>
-      <table className="table table-dark table-responsive-md">
+      <table className="table table-dark rounded-3 overflow-hidden table-responsive-md">
         <thead>
           <tr>
             <th>#</th>
@@ -430,7 +430,7 @@ const TimeSpentSelector = ({ time, setTimeRange }) => {
     <div class="btn-group">
       <button
         type="button"
-        class="btn dropdown-toggle"
+        class="btn btn-outline-primary dropdown-toggle"
         data-bs-toggle="dropdown"
         aria-expanded="false"
       >
