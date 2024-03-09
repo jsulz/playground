@@ -1,4 +1,13 @@
 import React, { useEffect, useState } from "react";
+import {
+  Tooltip,
+  ResponsiveContainer,
+  BarChart,
+  XAxis,
+  YAxis,
+  Legend,
+  Bar,
+} from "recharts";
 
 const currentlyViewing = "Artists";
 
@@ -104,23 +113,52 @@ export default function Spotify() {
 
   let table = null;
   if (topSongs && currentlyViewing == "Songs") {
+    const popData = topSongs.map((track) => {
+      return {
+        name: track.name,
+        value: track.popularity,
+      };
+    });
+    popData.sort((a, b) => b.value - a.value);
     table = (
-      <TopSongs
-        playTrack={handlePlayTrack}
-        userTopTracks={topSongs}
-        timeRange={trackTimeRange}
-        setTimeRange={setTrackTerm}
-        currentlyPlaying={currentlyPlaying}
-        player={player}
-      />
+      <>
+        <TopSongs
+          playTrack={handlePlayTrack}
+          userTopTracks={topSongs}
+          timeRange={trackTimeRange}
+          setTimeRange={setTrackTerm}
+          currentlyPlaying={currentlyPlaying}
+          player={player}
+        />
+        <HorizontalBarChart data={popData} type={"song"} />
+      </>
     );
   } else if (topArtists && currentlyViewing == "Artists") {
+    const genres = {};
+    topArtists.forEach((artist) => {
+      artist.genres.forEach((genre) => {
+        if (genre in genres) {
+          genres[genre] += 1;
+        } else {
+          genres[genre] = 1;
+        }
+      });
+    });
+    console.log(genres);
+    const data = [];
+    for (const [key, value] of Object.entries(genres)) {
+      data.push({ name: key, value: value });
+    }
+    data.sort((a, b) => b.value - a.value);
     table = (
-      <TopArtists
-        userTopArtists={topArtists}
-        timeRange={artistTimeRange}
-        setTimeRange={setArtistTerm}
-      />
+      <>
+        <TopArtists
+          userTopArtists={topArtists}
+          timeRange={artistTimeRange}
+          setTimeRange={setArtistTerm}
+        />
+        <HorizontalBarChart data={data} type={"genre"} />
+      </>
     );
   }
 
@@ -384,7 +422,10 @@ const TopSongs = ({
   const durationTransform = (duration_ms) => {
     const duration_s = ~~(duration_ms / 1000);
     const minutes = Math.floor(duration_s / 60);
-    const remainder_s = duration_s % 60;
+    let remainder_s = duration_s % 60;
+    if (remainder_s < 10) {
+      remainder_s = "0" + remainder_s;
+    }
     return `${minutes}:${remainder_s}`;
   };
 
@@ -544,5 +585,29 @@ const ClearSession = () => {
     <button className="btn btn-primary" onClick={handleClick}>
       Logout and Clear Session
     </button>
+  );
+};
+
+const HorizontalBarChart = ({ data, type }) => {
+  let label = undefined;
+  if (type == "song") {
+    label = "Popularity";
+  } else {
+    label = "Genre Count";
+  }
+  console.log(data);
+  return (
+    <>
+      <h2>{type} Popularity</h2>
+      <ResponsiveContainer width="100%" height={1200}>
+        <BarChart data={data} layout="vertical" margin={{ left: 30 }}>
+          <XAxis dataKey="value" type="number" />
+          <YAxis dataKey="name" type="category" tick={{ fontSize: 12 }} />
+          <Tooltip formatter={(value, name, props) => [value, label, props]} />
+          <Legend formatter={(name) => label} />
+          <Bar dataKey="value" fill="#b81d24" />
+        </BarChart>
+      </ResponsiveContainer>
+    </>
   );
 };
