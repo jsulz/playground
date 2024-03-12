@@ -1,7 +1,7 @@
+from os.path import join, dirname, realpath
 from flask import render_template
 from flask import Blueprint
 import markdown
-from os.path import join, dirname, realpath
 
 play = Blueprint("playground", __name__, template_folder="templates")
 

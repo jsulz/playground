@@ -1,3 +1,5 @@
+from os.path import join, dirname, realpath
+import markdown
 import os
 from flask import Flask, render_template
 from playground.bbospp import (
@@ -16,7 +18,6 @@ from playground.react_playground import (
 )
 from playground.coding_challenges import url_shortener, spotify
 from . import playground
-import markdown
 
 
 def create_app(test_config=None):
@@ -45,7 +46,8 @@ def create_app(test_config=None):
 
 
 def page_not_found(e):
-    with open("static/content/404.md", encoding="utf-8") as f:
+    error_path = join(dirname(realpath(__file__)), "static/content/404.md")
+    with open(error_path, encoding="utf-8") as f:
         text = f.read()
     html = markdown.markdown(text)
     results = {"html": html, "title": "404"}
