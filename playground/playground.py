@@ -1,6 +1,7 @@
 from flask import render_template
 from flask import Blueprint
 import markdown
+from os.path import join, dirname, realpath
 
 play = Blueprint("playground", __name__, template_folder="templates")
 
@@ -12,7 +13,8 @@ def home():
 
 @play.route("/about")
 def about():
-    with open("static/content/about.md", encoding="utf-8") as f:
+    about_path = join(dirname(realpath(__file__)), "static/content/about.md")
+    with open(about_path, encoding="utf-8") as f:
         text = f.read()
     html = markdown.markdown(text)
     results = {"html": html, "title": "About"}
