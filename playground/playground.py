@@ -15,6 +15,5 @@ def about():
     with open("static/content/about.md", encoding="utf-8") as f:
         text = f.read()
     html = markdown.markdown(text)
-    results = {"html": html}
-    print(results)
-    return render_template("pages/about.html.jinja", results=results)
+    results = {"html": html, "title": "About"}
+    return render_template("pages/base_page.html.jinja", results=results)

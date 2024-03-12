@@ -16,6 +16,7 @@ from playground.react_playground import (
 )
 from playground.coding_challenges import url_shortener, spotify
 from . import playground
+import markdown
 
 
 def create_app(test_config=None):
@@ -44,4 +45,8 @@ def create_app(test_config=None):
 
 
 def page_not_found(e):
-    return render_template("pages/404.html.jinja"), 404
+    with open("static/content/404.md", encoding="utf-8") as f:
+        text = f.read()
+    html = markdown.markdown(text)
+    results = {"html": html, "title": "404"}
+    return render_template("pages/base_page.html.jinja", results=results), 404
