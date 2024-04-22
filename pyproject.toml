@@ -16,6 +16,8 @@ google-cloud-firestore = "^2.14.0"
 pandas = "^2.2.0"
 requests = "^2.31.0"
 markdown = "^3.5.2"
+keras = "^3.3.0"
+tensorflow = "^2.16.1"
 
 [build-system]
 requires = ["poetry-core"]
