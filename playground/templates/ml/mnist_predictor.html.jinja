@@ -9,12 +9,18 @@
         <div class="container-fluid">
             <div class="col-md-12">
                 <div class="row mt-5">
-                    <div class="container">
+                    <div class="col-8 px-4">
+                        <p>The Modified National Institute of Standards and Technology (MNIST) database is a canonical collection of handwritten digits used to train machine learning and other image classification/processing tools. In this sandbox, I've trained a small neural net using Keras on this dataset (with the version of MNIST built into Keras). There are 60,000 images total (50,000 were used for training with 10,000 withheld for validation), each measuring 28 x 28 pixels. The images are grayscaled, with each pixel value measuring 0 - 255 (representing the intensity of the pixel).</p>
+                        <p>After training the neural net, it's been saved and can be loaded into memory for predictions. To the right is a canvas where you can draw a number and click "predict." This will take the current state of the canvas and save it as a image, where it is sent to our Flask backend, converted to a grayscale image, resized to 28px by 28px, with each pixel's value loaded into a Numpy array and normalized so that it is between 0 and 1. That array is then sent to the neural net for prediction and the most likely value is returned.</p>
+                    </div>
+                    <div class="col-2 container">
                         <div id="sketch">
-                            <canvas id="mnist" style="height: 100px; width: 100px"></canvas>
-                            <button class="btn btn-primary" onclick="helloWorld()">Predict</button>
+                            <canvas id="mnist" class="mb-2"></canvas>
+                            <button class="btn btn-primary mb-2" onclick="predictMNIST()">Predict</button>
+                            <button class="btn btn-primary" onclick="clearCanvas()">Clear</button>
                         </div>
                     </div>
+                    <div class="col-2" id="mnist-prediction">Prediction: <code>Awaiting</code></div>
                 </div>
             </div>
         </div>
