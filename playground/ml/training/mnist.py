@@ -39,4 +39,4 @@ plt.gca().set_ylim(0, 1)
 plt.savefig("experiment_images/mnist_learning_curves.png")
 
 # save the model
-model.save("../artifacts/mnist_model.keras")
+model.save("../artifacts/mnist_model_test.keras")
