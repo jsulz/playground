@@ -34,8 +34,12 @@ def predict():
     final = np.array(image, dtype=np.float32) / 255.0
 
     print(
-        os.path.abspath(
-            os.path.join(os.path.dirname(__file__), "../artifacts/mnist_model.keras")
+        os.path.exists(
+            os.path.abspath(
+                os.path.join(
+                    os.path.dirname(__file__), "../artifacts/mnist_model.keras"
+                )
+            )
         )
     )
 
