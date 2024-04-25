@@ -3,8 +3,6 @@
 
 import keras
 import keras.datasets.mnist as mnist
-import matplotlib.pyplot as plt
-import pandas as pd
 
 # load the mnist dataset
 (x_train_full, y_train_full), (x_test, y_test) = mnist.load_data()
