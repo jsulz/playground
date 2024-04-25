@@ -20,4 +20,4 @@ COPY --from=build /app/dist/ /app/playground/static/dist
 ENV HOST 0.0.0.0
 EXPOSE 8888
 
-CMD ["gunicorn"  , "-b", "0.0.0.0:8888", "run:app"]
+CMD ["gunicorn"  , "--workers=4", "-b", "0.0.0.0:8888", "run:app"]
