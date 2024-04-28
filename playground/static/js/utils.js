@@ -77,7 +77,7 @@ if (mnistEl != null) {
   var canvas = document.querySelector("#mnist");
   var ctx = canvas.getContext("2d");
 
-  var sketch = document.querySelector("#sketch");
+  var sketch = document.querySelector("#mnist");
   var sketch_style = getComputedStyle(sketch);
   canvas.width = parseInt(sketch_style.getPropertyValue("width"));
   canvas.height = parseInt(sketch_style.getPropertyValue("height"));
