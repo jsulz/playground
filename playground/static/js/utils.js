@@ -98,6 +98,19 @@ if (mnistEl != null) {
     false
   );
 
+  /* Mouse Capturing Work */
+  canvas.addEventListener(
+    "touchmove",
+    function (e) {
+      last_mouse.x = mouse.x;
+      last_mouse.y = mouse.y;
+
+      mouse.x = e.pageX - this.offsetLeft;
+      mouse.y = e.pageY - this.offsetTop;
+    },
+    false
+  );
+
   /* Drawing on Paint App */
   ctx.lineWidth = 10;
   ctx.lineJoin = "round";
@@ -115,9 +128,25 @@ if (mnistEl != null) {
   );
 
   canvas.addEventListener(
+    "touchstart",
+    function (e) {
+      canvas.addEventListener("touchstart", onPaint, false);
+    },
+    false
+  );
+
+  canvas.addEventListener(
     "mouseup",
     function () {
       canvas.removeEventListener("mousemove", onPaint, false);
+    },
+    false
+  );
+
+  canvas.addEventListener(
+    "touchend",
+    function () {
+      canvas.removeEventListener("touchend", onPaint, false);
     },
     false
   );
