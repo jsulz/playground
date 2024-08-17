@@ -82,35 +82,6 @@ if (mnistEl != null) {
   canvas.width = parseInt(sketch_style.getPropertyValue("width"));
   canvas.height = parseInt(sketch_style.getPropertyValue("height"));
 
-  // Prevent scrolling when touching the canvas
-  document.body.addEventListener(
-    "touchstart",
-    function (e) {
-      if (e.target == canvas) {
-        e.preventDefault();
-      }
-    },
-    { passive: false }
-  );
-  document.body.addEventListener(
-    "touchend",
-    function (e) {
-      if (e.target == canvas) {
-        e.preventDefault();
-      }
-    },
-    { passive: false }
-  );
-  document.body.addEventListener(
-    "touchmove",
-    function (e) {
-      if (e.target == canvas) {
-        e.preventDefault();
-      }
-    },
-    { passive: false }
-  );
-
   var mouse = { x: 0, y: 0 };
   var last_mouse = { x: 0, y: 0 };
 
@@ -131,12 +102,11 @@ if (mnistEl != null) {
   canvas.addEventListener(
     "touchmove",
     function (e) {
-      touch = e.touches[0];
       last_mouse.x = mouse.x;
       last_mouse.y = mouse.y;
 
-      mouse.x = touch.pageX - this.offsetLeft;
-      mouse.y = touch.pageY - this.offsetTop;
+      mouse.x = e.pageX - this.offsetLeft;
+      mouse.y = e.pageY - this.offsetTop;
     },
     false
   );
@@ -160,7 +130,7 @@ if (mnistEl != null) {
   canvas.addEventListener(
     "touchstart",
     function (e) {
-      canvas.addEventListener("touchmove", onPaint, false);
+      canvas.addEventListener("touchstart", onPaint, false);
     },
     false
   );
@@ -176,7 +146,7 @@ if (mnistEl != null) {
   canvas.addEventListener(
     "touchend",
     function () {
-      canvas.removeEventListener("touchmove", onPaint, false);
+      canvas.removeEventListener("touchend", onPaint, false);
     },
     false
   );
