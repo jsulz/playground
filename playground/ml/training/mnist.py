@@ -30,7 +30,7 @@ model.compile(
 )
 
 # train the model
-history = model.fit(x_train, y_train, epochs=35, validation_data=(x_valid, y_valid))
+history = model.fit(x_train, y_train, epochs=30, validation_data=(x_valid, y_valid))
 
 # plot the learning curves and save them
 pd.DataFrame(history.history).plot(figsize=(8, 5))
