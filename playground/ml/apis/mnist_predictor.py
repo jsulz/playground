@@ -33,12 +33,20 @@ def predict():
     # Convert the image to a numpy array and normalize the values
     final = np.array(image, dtype=np.float32) / 255.0
 
+    print(
+        os.path.exists(
+            os.path.abspath(
+                os.path.join(
+                    os.path.dirname(__file__), "../artifacts/mnist_model.keras"
+                )
+            )
+        )
+    )
+
     # load the mnist_model from the artifacts directory
     model = keras.models.load_model(
         os.path.abspath(
-            os.path.join(
-                os.path.dirname(__file__), "../artifacts/mnist_model_test.keras"
-            )
+            os.path.join(os.path.dirname(__file__), "../artifacts/mnist_model.keras")
         )
     )
     # make a prediction using the test data
