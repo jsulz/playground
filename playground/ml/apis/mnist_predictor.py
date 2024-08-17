@@ -1,6 +1,6 @@
 import os
 from flask import Blueprint, render_template, request
-from keras import models
+import keras
 import base64
 from PIL import Image
 import io
@@ -34,7 +34,7 @@ def predict():
     final = np.array(image, dtype=np.float32) / 255.0
 
     # load the mnist_model from the artifacts directory
-    model = models.load_model(
+    model = keras.models.load_model(
         os.path.abspath(
             os.path.join(
                 os.path.dirname(__file__), "../artifacts/mnist_model_test.keras"
