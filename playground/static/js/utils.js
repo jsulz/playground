@@ -99,7 +99,7 @@ if (mnistEl != null) {
   );
 
   /* Drawing on Paint App */
-  ctx.lineWidth = 10;
+  ctx.lineWidth = 5;
   ctx.lineJoin = "round";
   ctx.lineCap = "round";
   ctx.strokeStyle = "white";
