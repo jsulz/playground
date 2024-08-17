@@ -8,7 +8,6 @@ import numpy as np
 
 # create a blueprint for the mnist predictor
 mnist_predictor = Blueprint("mnist_predictor", __name__, template_folder="templates")
-os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
 
 
 @mnist_predictor.route("/mnist-predictor", methods=["GET"])
@@ -32,12 +31,6 @@ def predict():
 
     # Convert the image to a numpy array and normalize the values
     final = np.array(image, dtype=np.float32) / 255.0
-
-    print(
-        os.path.abspath(
-            os.path.join(os.path.dirname(__file__), "../artifacts/mnist_model.keras")
-        )
-    )
 
     # load the mnist_model from the artifacts directory
     model = keras.models.load_model(
