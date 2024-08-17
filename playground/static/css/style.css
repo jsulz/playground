@@ -225,8 +225,8 @@ footer .bi-linkedin {
   background: var(--netflix-muted-red-rgba);
 }
 
-#mnist {
+#sketch {
   width: 100px;
   height: 100px;
-  display: block;
+  border: 1px solid black;
 }
