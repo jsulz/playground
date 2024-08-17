@@ -18,7 +18,8 @@ def mnist():
 
 @mnist_predictor.route("/mnist-predict", methods=["POST"])
 def predict():
-
+    # print request body
+    print("hello")
     # convert the request body, which is a base64 encoded image, to an actual image
     data = request.get_json()
     image_data = data["image"]
@@ -40,6 +41,8 @@ def predict():
     )
     # make a prediction using the test data
     prediction = model.predict(final[None, ...])
+    # print the prediction and the actual value
+    print(f"Prediction: {prediction}")
 
     # return the prediction
     return {"prediction": float(np.argmax(prediction))}

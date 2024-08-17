@@ -131,19 +131,7 @@ if (mnistEl != null) {
   };
 }
 
-const clearCanvas = () => {
-  var canvas = document.querySelector("#mnist");
-  var ctx = canvas.getContext("2d");
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.lineWidth = 10;
-  ctx.lineJoin = "round";
-  ctx.lineCap = "round";
-  ctx.strokeStyle = "white";
-  ctx.fillStyle = "black";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-};
-
-const predictMNIST = () => {
+const helloWorld = () => {
   const image = canvas.toDataURL("image/png");
   const options = {
     method: "POST",
@@ -155,7 +143,6 @@ const predictMNIST = () => {
   fetch("/mnist-predict", options)
     .then((response) => response.json())
     .then((data) => {
-      const prediction = document.getElementById("mnist-prediction");
-      prediction.textContent = `Prediction: ${data.prediction}`;
+      console.log(data);
     });
 };
