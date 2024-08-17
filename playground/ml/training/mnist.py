@@ -32,5 +32,11 @@ model.compile(
 # train the model
 history = model.fit(x_train, y_train, epochs=35, validation_data=(x_valid, y_valid))
 
+# plot the learning curves and save them
+pd.DataFrame(history.history).plot(figsize=(8, 5))
+plt.grid(True)
+plt.gca().set_ylim(0, 1)
+plt.savefig("experiment_images/mnist_learning_curves.png")
+
 # save the model
 model.save("../artifacts/mnist_model_test.keras")
