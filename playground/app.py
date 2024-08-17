@@ -17,7 +17,6 @@ from playground.react_playground import (
     netflix,
 )
 from playground.coding_challenges import url_shortener, spotify
-from playground.ml.apis import mnist_predictor
 from . import playground
 
 
@@ -40,7 +39,6 @@ def create_app(test_config=None):
     app.register_blueprint(url_shortener.url)
     app.register_blueprint(netflix.netflix)
     app.register_blueprint(spotify.spotify)
-    app.register_blueprint(mnist_predictor.mnist_predictor)
 
     app.register_error_handler(404, page_not_found)
 
